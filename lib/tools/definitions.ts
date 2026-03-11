@@ -73,6 +73,7 @@ import {
   // AI tools
   Bot,
   PenTool,
+  Monitor,
 } from "lucide-react";
 
 export const TOOL_DEFINITIONS: Tool[] = [
@@ -284,6 +285,18 @@ export const TOOL_DEFINITIONS: Tool[] = [
   },
 
   {
+    id: "url-shortener",
+    name: "URL Shortener",
+    description: "Shorten long URLs into compact links",
+    category: "developer",
+    icon: Globe,
+    slug: "url-shortener",
+    component: "URLShortener",
+    tags: ["developer", "url", "shortener"],
+    usageCount: 0,
+  },
+
+  {
     id: "url-decoder",
     name: "URL Decoder",
     description: "Decode URL-encoded strings",
@@ -316,6 +329,18 @@ export const TOOL_DEFINITIONS: Tool[] = [
     slug: "regex-tester",
     component: "RegexTester",
     tags: ["developer", "regex"],
+    usageCount: 0,
+  },
+
+  {
+    id: "bsod",
+    name: "Blue Screen of Death",
+    description: "Fake Windows 10 BSOD for pranks",
+    category: "developer",
+    icon: Monitor,
+    slug: "bsod",
+    component: "BSOD",
+    tags: ["developer", "utility", "prank"],
     usageCount: 0,
   },
 

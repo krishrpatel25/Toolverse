@@ -81,25 +81,6 @@ export default function Home() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-[#020202] text-neutral-400 font-sans">
-        <Header />
-        <main className="relative z-10">
-          <section className="relative pt-44 pb-20 px-6">
-            <div className="max-w-7xl mx-auto text-center">
-              <div className="space-y-8">
-                <div className="h-24 md:h-[180px] w-3/4 mx-auto bg-white/5 animate-pulse rounded-3xl" />
-                <div className="h-6 md:h-12 w-1/2 mx-auto bg-white/5 animate-pulse rounded-xl" />
-                <div className="h-14 w-48 mx-auto bg-white/10 animate-pulse rounded-full" />
-              </div>
-            </div>
-          </section>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   const categoryTools = categories.map((cat) => ({
     category: cat,

@@ -10,7 +10,6 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: 'ToolVerse - 100+ Free Online Utility Tools',
   description: 'Access 100+ free online tools for text processing, development, image manipulation, calculations, utilities, and more. No signup required.',
-  generator: 'v0.app',
   keywords: [
     'online tools',
     'text tools',
@@ -30,19 +29,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
+        url: '/toolverse_logo.png',
       },
     ],
-    apple: '/apple-icon.png',
+    apple: '/toolverse_logo.png',
   },
 }
 

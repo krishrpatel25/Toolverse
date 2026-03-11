@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Copy } from 'lucide-react';
+import { Copy, Sparkles, Map, Globe, Shield, Search, FileText, Download, RotateCcw, Layout, Share2, BarChart3, Eye } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard, cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function MetaTagGenerator() {
   const [title, setTitle] = useState('');
@@ -21,49 +23,66 @@ export function MetaTagGenerator() {
 
     const meta = `<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>${title}</title>\n${description ? `<meta name="description" content="${description}">\n` : ''}${keywords ? `<meta name="keywords" content="${keywords}">` : ''}`;
 
-    navigator.clipboard.writeText(meta);
+    copyToClipboard(meta);
     toast.success('Meta tags copied to clipboard!');
   };
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
-        <h2 className="text-2xl font-bold mb-6 text-foreground">Meta Tag Generator</h2>
+      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+             <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+              <Search className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white tracking-tight">Meta Tag Generator</h2>
+              <p className="text-sm text-neutral-400">Boost your SEO with perfect meta data</p>
+            </div>
+          </div>
+        </div>
 
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-foreground">Page Title</label>
+        <div className="grid gap-6">
+          <div className="space-y-2">
+            <div className="flex justify-between items-center px-1">
+               <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Page Title</label>
+               <span className={cn("text-[10px] font-bold", title.length > 55 ? "text-red-400" : "text-emerald-500")}>{title.length}/60</span>
+            </div>
             <Input
               placeholder="My Awesome Page"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={60}
+              className="h-14 bg-white/[0.03] border-white/10 rounded-2xl text-lg font-medium"
             />
-            <p className="text-xs text-muted-foreground mt-1">{title.length}/60 characters</p>
           </div>
 
-          <div>
-            <label className="text-sm font-medium text-foreground">Meta Description</label>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center px-1">
+               <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Meta Description</label>
+               <span className={cn("text-[10px] font-bold", description.length > 150 ? "text-red-400" : "text-emerald-500")}>{description.length}/160</span>
+            </div>
             <Textarea
-              placeholder="Enter page description"
+              placeholder="Enter page description..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               maxLength={160}
+              className="min-h-[120px] bg-white/[0.03] border-white/10 rounded-2xl p-4 resize-none"
             />
-            <p className="text-xs text-muted-foreground mt-1">{description.length}/160 characters</p>
           </div>
 
-          <div>
-            <label className="text-sm font-medium text-foreground">Keywords (comma separated)</label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 px-1">Keywords</label>
             <Input
-              placeholder="keyword1, keyword2, keyword3"
+              placeholder="SEO, tools, website, meta"
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
+              className="h-14 bg-white/[0.03] border-white/10 rounded-2xl px-4"
             />
           </div>
 
-          <Button onClick={generateMeta} className="w-full">
-            <Copy className="w-4 h-4 mr-2" />
+          <Button onClick={generateMeta} className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-emerald-500/10 mt-4">
+            <Sparkles className="w-5 h-5 mr-2" />
             Generate & Copy Meta Tags
           </Button>
         </div>
@@ -92,12 +111,6 @@ export function SitemapGenerator() {
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  <url>
-    <loc>${cleanUrl}/about</loc>
-    <lastmod>${date}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
 </urlset>`;
     setXml(output);
     toast.success('Sitemap generated successfully');
@@ -105,37 +118,55 @@ export function SitemapGenerator() {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
-        <h2 className="text-2xl font-bold mb-6 text-foreground">Sitemap XML Generator</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium mb-2 block">Website URL</label>
+      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+             <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+              <Map className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white tracking-tight">Sitemap XML Generator</h2>
+              <p className="text-sm text-neutral-400">Create a search-engine friendly index</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 px-1">Website URL</label>
             <Input
               placeholder="https://example.com"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
+              className="h-14 bg-white/[0.03] border-white/10 rounded-2xl text-lg pr-4"
             />
           </div>
-          <Button className="w-full" onClick={generate}>Generate Sitemap</Button>
+          <Button onClick={generate} className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-widest rounded-2xl">
+            <Sparkles className="w-5 h-5 mr-2" />
+            Generate Sitemap
+          </Button>
 
-          {xml && (
-            <div className="mt-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium">Generated XML</span>
-                <Button size="sm" variant="ghost" onClick={() => {
-                  navigator.clipboard.writeText(xml);
-                  toast.success('Copied!');
-                }}>
-                  <Copy className="h-4 w-4 mr-2" /> Copy
-                </Button>
-              </div>
-              <Textarea
-                readOnly
-                className="h-48 font-mono text-sm"
-                value={xml}
-              />
-            </div>
-          )}
+          <AnimatePresence>
+            {xml && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="space-y-4 pt-6"
+              >
+                <div className="flex justify-between items-center px-1">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/60">Generated XML Result</span>
+                  <Button variant="ghost" size="sm" onClick={() => copyToClipboard(xml).then(() => toast.success('Copied!'))} className="text-emerald-400 hover:bg-emerald-500/10 rounded-xl">
+                    <Copy className="h-4 w-4 mr-2" /> Copy
+                  </Button>
+                </div>
+                <Textarea
+                  readOnly
+                  className="min-h-[200px] bg-black/40 border-emerald-500/20 rounded-2xl p-6 font-mono text-sm text-emerald-500/90 scrollbar-hide"
+                  value={xml}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </Card>
     </div>
@@ -169,29 +200,61 @@ export function RobotsTxtGenerator() {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
-        <h2 className="text-2xl font-bold mb-6 text-foreground">Robots.txt Generator</h2>
-        <div className="space-y-4 mb-6">
-          <div className="flex items-center gap-2">
-            <input type="checkbox" id="allowAll" checked={config.allowAll} onChange={(e) => setConfig({ ...config, allowAll: e.target.checked })} className="rounded bg-background" />
-            <label htmlFor="allowAll" className="text-sm">Allow all standard bots by default</label>
+      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+             <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+              <Shield className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white tracking-tight">Robots.txt Generator</h2>
+              <p className="text-sm text-neutral-400">Control search engine crawler behavior</p>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <input type="checkbox" id="blockGoogle" checked={config.blockGoogle} onChange={(e) => setConfig({ ...config, blockGoogle: e.target.checked })} className="rounded bg-background" />
-            <label htmlFor="blockGoogle" className="text-sm">Block Googlebot</label>
-          </div>
-          <div className="flex items-center gap-2">
-            <input type="checkbox" id="blockBing" checked={config.blockBing} onChange={(e) => setConfig({ ...config, blockBing: e.target.checked })} className="rounded bg-background" />
-            <label htmlFor="blockBing" className="text-sm">Block Bingbot</label>
-          </div>
-          <Button className="w-full mt-4" onClick={generate}>Generate Robots.txt</Button>
         </div>
 
-        {output && (
-          <div className="mt-4">
-            <Textarea readOnly className="h-32 font-mono text-sm" value={output} />
-          </div>
-        )}
+        <div className="space-y-5">
+           {[
+             { id: 'allowAll', label: 'Allow all standard bots', state: config.allowAll, set: (v: boolean) => setConfig({...config, allowAll: v}) },
+             { id: 'blockGoogle', label: 'Block Googlebot crawler', state: config.blockGoogle, set: (v: boolean) => setConfig({...config, blockGoogle: v}) },
+             { id: 'blockBing', label: 'Block Bingbot crawler', state: config.blockBing, set: (v: boolean) => setConfig({...config, blockBing: v}) },
+           ].map((opt) => (
+             <button
+               key={opt.id}
+               onClick={() => opt.set(!opt.state)}
+               className={cn(
+                 "w-full flex items-center justify-between p-4 rounded-2xl border transition-all",
+                 opt.state ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-400" : "bg-white/[0.02] border-white/5 text-neutral-500 hover:border-white/10"
+               )}
+             >
+               <span className="text-sm font-bold tracking-tight">{opt.label}</span>
+               <div className={cn("w-2 h-2 rounded-full", opt.state ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-neutral-800")} />
+             </button>
+           ))}
+
+          <Button onClick={generate} className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-widest rounded-2xl mt-4">
+            <Sparkles className="w-5 h-5 mr-2" />
+            Generate Robots.txt
+          </Button>
+        </div>
+
+        <AnimatePresence>
+          {output && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-8 space-y-4"
+            >
+              <div className="flex justify-between items-center px-1">
+                <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/60">Final Configuration</span>
+                <Button variant="ghost" size="sm" onClick={() => copyToClipboard(output).then(() => toast.success('Copied!'))} className="text-emerald-400 hover:bg-emerald-500/10 rounded-xl">
+                  <Copy size={16} className="mr-2" /> Copy
+                </Button>
+              </div>
+              <Textarea readOnly className="min-h-[120px] bg-black/40 border-emerald-500/20 rounded-2xl p-6 font-mono text-sm text-emerald-500/90 scrollbar-hide" value={output} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Card>
     </div>
   );
@@ -235,39 +298,54 @@ export function KeywordDensity() {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
-        <h2 className="text-2xl font-bold mb-6 text-foreground">Keyword Density Checker</h2>
+      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
+         <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+             <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+              <BarChart3 className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white tracking-tight">Keyword Density</h2>
+              <p className="text-sm text-neutral-400">Analyze your content for SEO keyword usage</p>
+            </div>
+          </div>
+        </div>
+
         <div className="space-y-4">
           <Textarea
-            placeholder="Paste your content here to analyze keyword usage..."
-            className="h-32"
+            placeholder="Paste your content here to analyze..."
+            className="min-h-[200px] bg-white/[0.03] border-white/10 rounded-2xl p-6 font-mono text-sm focus:border-emerald-500/50 transition-colors resize-none mb-4"
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
-          <Button className="w-full" onClick={analyze}>Analyze Text</Button>
+          <Button onClick={analyze} className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-widest rounded-2xl">
+            Analyze Text
+          </Button>
 
-          {results.length > 0 && (
-            <div className="mt-6 border rounded-lg overflow-hidden">
-              <table className="w-full text-sm text-left">
-                <thead className="bg-muted">
-                  <tr>
-                    <th className="px-4 py-3 font-medium">Keyword</th>
-                    <th className="px-4 py-3 font-medium">Count</th>
-                    <th className="px-4 py-3 font-medium">Density</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {results.map((r, i) => (
-                    <tr key={i}>
-                      <td className="px-4 py-3">{r.word}</td>
-                      <td className="px-4 py-3">{r.count}</td>
-                      <td className="px-4 py-3">{r.density}%</td>
+          <AnimatePresence>
+            {results.length > 0 && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 border border-white/10 rounded-[2rem] overflow-hidden bg-black/20">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-white/5">
+                    <tr>
+                      <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-neutral-500">Keyword</th>
+                      <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-neutral-500">Count</th>
+                      <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-neutral-500 text-right">Density</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {results.map((r, i) => (
+                      <tr key={i} className="hover:bg-white/[0.02] transition-colors">
+                        <td className="px-6 py-4 text-white font-medium">{r.word}</td>
+                        <td className="px-6 py-4 text-emerald-500/80 font-mono">{r.count}</td>
+                        <td className="px-6 py-4 text-right text-emerald-400 font-bold">{r.density}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </Card>
     </div>
@@ -281,42 +359,49 @@ export function SerpPreview() {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
-        <h2 className="text-2xl font-bold mb-6 text-foreground">Google SERP Preview</h2>
-
-        <div className="space-y-4 mb-8">
-          <div>
-            <label className="text-sm font-medium mb-1 block">SEO Title ({title.length}/60)</label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-          </div>
-          <div>
-            <label className="text-sm font-medium mb-1 block">Meta Description ({desc.length}/160)</label>
-            <Textarea value={desc} onChange={(e) => setDesc(e.target.value)} className="h-20" />
-          </div>
-          <div>
-            <label className="text-sm font-medium mb-1 block">URL slug</label>
-            <Input value={url} onChange={(e) => setUrl(e.target.value)} />
+      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
+         <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+             <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+              <Eye className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white tracking-tight">SERP Preview</h2>
+              <p className="text-sm text-neutral-400">See how your page appears on Google</p>
+            </div>
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t">
-          <h3 className="text-sm font-medium text-muted-foreground mb-4">Preview</h3>
-          <div className="bg-white p-4 rounded-md font-sans max-w-[600px] border">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="bg-neutral-200 rounded-full w-4 h-4"></div>
-              <div>
-                <div className="text-[14px] text-[#202124] leading-tight">{url.split('/')[0]}</div>
-                <div className="text-[12px] text-[#4d5156] leading-tight flex items-center">
-                  https://{url} <span className="mx-1 text-[10px]">▼</span>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="space-y-4">
+             <div className="space-y-2">
+               <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 px-1">SEO Title</label>
+               <Input value={title} onChange={(e) => setTitle(e.target.value)} className="bg-white/[0.03] border-white/10 rounded-xl" />
+             </div>
+             <div className="space-y-2">
+               <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 px-1">Meta Description</label>
+               <Textarea value={desc} onChange={(e) => setDesc(e.target.value)} className="min-h-[100px] bg-white/[0.03] border-white/10 rounded-xl resize-none" />
+             </div>
+             <div className="space-y-2">
+               <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 px-1">URL path</label>
+               <Input value={url} onChange={(e) => setUrl(e.target.value)} className="bg-white/[0.03] border-white/10 rounded-xl" />
+             </div>
+          </div>
+
+          <div className="bg-white p-8 rounded-[2rem] shadow-inner flex flex-col justify-center">
+             <div className="flex items-center gap-2 mb-2">
+                <div className="w-4 h-4 rounded-full bg-neutral-200" />
+                <div className="flex flex-col">
+                   <span className="text-[14px] text-[#202124] leading-none mb-0.5">{url.split('/')[0]}</span>
+                   <span className="text-[12px] text-[#4d5156] leading-none">https://{url}</span>
                 </div>
-              </div>
-            </div>
-            <div className="text-[20px] text-[#1a0dab] font-medium leading-[1.3] mb-1 hover:underline cursor-pointer truncaate">
-              {title || 'Page Title'}
-            </div>
-            <div className="text-[14px] text-[#4d5156] leading-[1.58] line-clamp-2">
-              {desc || 'Page description'}
-            </div>
+             </div>
+             <div className="text-[20px] text-[#1a0dab] hover:underline cursor-pointer mb-1 line-clamp-1">
+                {title || 'Page Title'}
+             </div>
+             <div className="text-[14px] text-[#4d5156] line-clamp-2 leading-relaxed">
+                {desc || 'Enter a description to see a preview of your snippet.'}
+             </div>
           </div>
         </div>
       </Card>
@@ -337,47 +422,60 @@ export function OpenGraphGenerator() {
 
     const og = `<meta property="og:title" content="${title}">\n<meta property="og:description" content="${description || title}">\n<meta property="og:url" content="${url}">\n<meta property="og:type" content="website">`;
 
-    navigator.clipboard.writeText(og);
+    copyToClipboard(og);
     toast.success('Open Graph tags copied!');
   };
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
-        <h2 className="text-2xl font-bold mb-6 text-foreground">Open Graph Generator</h2>
+      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
+         <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+             <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+              <Share2 className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white tracking-tight">Open Graph Generator</h2>
+              <p className="text-sm text-neutral-400">Optimize how your link looks on social media</p>
+            </div>
+          </div>
+        </div>
 
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-foreground">Title</label>
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 px-1">Share Title</label>
             <Input
-              placeholder="My Page Title"
+              placeholder="Post Title for Social Media"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="h-14 bg-white/[0.03] border-white/10 rounded-2xl"
             />
           </div>
 
-          <div>
-            <label className="text-sm font-medium text-foreground">Description</label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 px-1">Share Description</label>
             <Textarea
-              placeholder="Page description"
+              placeholder="Short catchy description..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              className="min-h-[100px] bg-white/[0.03] border-white/10 rounded-2xl p-4 resize-none"
             />
           </div>
 
-          <div>
-            <label className="text-sm font-medium text-foreground">URL</label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-neutral-500 px-1">Page URL</label>
             <Input
-              placeholder="https://example.com"
+              placeholder="https://example.com/post"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               type="url"
+              className="h-14 bg-white/[0.03] border-white/10 rounded-2xl"
             />
           </div>
 
-          <Button onClick={generateOG} className="w-full">
-            <Copy className="w-4 h-4 mr-2" />
-            Generate & Copy OG Tags
+          <Button onClick={generateOG} className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-widest rounded-2xl shadow-lg mt-4">
+            <Sparkles className="w-5 h-5 mr-2" />
+            Generate OG Tags
           </Button>
         </div>
       </Card>

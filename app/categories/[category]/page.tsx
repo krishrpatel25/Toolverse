@@ -77,7 +77,7 @@ export default async function CategoryPage({
 
               return (
                 <Link key={tool.id} href={`/tools/${tool.slug}`}>
-                  <Card className="tool-card h-full cursor-pointer">
+                  <Card className="tool-card h-full cursor-pointer rounded-[2rem]">
                     <div className="flex items-start justify-between mb-4 relative z-10 w-full">
                       <div className="tool-icon-wrapper">
                         <Icon className="tool-icon" />

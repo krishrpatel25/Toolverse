@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Copy, RotateCcw, CheckCircle, AlertCircle } from "lucide-react";
+import { Copy, RotateCcw, CheckCircle, AlertCircle, FileJson, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { copyToClipboard } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function JSONFormatter() {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('{"name": "ToolVerse", "type": "premium", "features": ["fast", "beautiful", "reliable"]}');
   const [indent, setIndent] = useState("2");
   const [output, setOutput] = useState("");
   const [isValid, setIsValid] = useState(true);
@@ -71,99 +72,106 @@ export function JSONFormatter() {
 
   return (
     <div className="space-y-6 w-full">
-      {/* Editors */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Input */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Input JSON</label>
-
-          <Textarea
-            placeholder='{"example": "json"}'
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="min-h-[220px] resize-none font-mono text-sm"
-          />
+      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+             <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+              <FileJson className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white tracking-tight">JSON Formatter</h2>
+              <p className="text-sm text-neutral-400">Beautify or minify your JSON data</p>
+            </div>
+          </div>
         </div>
 
-        {/* Output */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Formatted Output</label>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <label className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Input Raw JSON</label>
+              {!isValid && <span className="text-[10px] text-red-400 font-bold uppercase animate-pulse">Invalid Format</span>}
+            </div>
+            <Textarea
+              placeholder='{"example": "json"}'
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className="min-h-[350px] bg-white/[0.03] border-white/10 rounded-2xl p-6 font-mono text-sm focus:border-emerald-500/50 transition-colors resize-none"
+            />
+          </div>
 
-          <Card className="border bg-secondary/30 p-3 min-h-[220px] overflow-auto">
-            <pre className="font-mono text-sm whitespace-pre-wrap break-words">
-              {output || "Formatted JSON will appear here..."}
-            </pre>
-          </Card>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <label className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Formatted Output</label>
+              {isValid && input && <span className="text-[10px] text-emerald-400 font-bold uppercase flex items-center gap-1"><CheckCircle size={10} /> Validated</span>}
+            </div>
+            <div className="relative group">
+               <Textarea
+                readOnly
+                className="min-h-[350px] bg-black/40 border-emerald-500/20 rounded-2xl p-6 font-mono text-sm text-emerald-500/90 resize-none"
+                value={output || "Formatted JSON will appear here..."}
+              />
+              {output && (
+                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button size="sm" onClick={handleCopy} className="bg-emerald-500 hover:bg-emerald-600 text-black rounded-xl">
+                    <Copy size={16} className="mr-2" />
+                    Copy
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Validation */}
-      {input && (
-        <Card
-          className={`border p-3 flex items-center gap-2 ${
-            isValid
-              ? "bg-green-500/10 border-green-500/30"
-              : "bg-red-500/10 border-red-500/30"
-          }`}
-        >
-          {isValid ? (
-            <>
-              <CheckCircle className="h-5 w-5 text-green-600" />
-              <span className="text-sm text-green-700">Valid JSON</span>
-            </>
-          ) : (
-            <>
-              <AlertCircle className="h-5 w-5 text-red-600" />
-              <span className="text-sm text-red-700 break-all">{error}</span>
-            </>
-          )}
-        </Card>
-      )}
+        <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-6 pt-6 border-t border-white/5">
+           <div className="flex items-center gap-2">
+             <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest mr-2">Indentation:</span>
+             <div className="flex bg-white/[0.03] border border-white/10 rounded-xl p-1">
+               {["2", "4", "8"].map((spaces) => (
+                 <button
+                   key={spaces}
+                   onClick={() => setIndent(spaces)}
+                   className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                     indent === spaces ? 'bg-emerald-500 text-black' : 'text-neutral-400 hover:text-white'
+                   }`}
+                 >
+                   {spaces} Spaces
+                 </button>
+               ))}
+             </div>
+           </div>
 
-      {/* Indentation */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Indentation</label>
-
-        <div className="flex flex-wrap gap-2">
-          {["2", "4", "8"].map((spaces) => (
-            <Button
-              key={spaces}
-              variant={indent === spaces ? "default" : "outline"}
-              size="sm"
-              onClick={() => setIndent(spaces)}
-            >
-              {spaces} Spaces
-            </Button>
-          ))}
+           <div className="flex gap-3">
+             <Button variant="outline" onClick={handleReset} className="rounded-xl border-white/10 hover:bg-white/5 h-11 text-neutral-400">
+                <RotateCcw size={16} className="mr-2" />
+                Reset
+             </Button>
+             <Button onClick={handleMinify} disabled={!isValid || !input} className="rounded-xl border-white/10 hover:bg-emerald-500/10 text-emerald-400 variant-outline h-11">
+                Minify & Copy
+             </Button>
+             <Button onClick={handleCopy} disabled={!output} className="bg-emerald-500 hover:bg-emerald-600 text-black font-bold px-6 rounded-xl h-11">
+                <Copy size={16} className="mr-2" />
+                Copy Formatted
+             </Button>
+           </div>
         </div>
-      </div>
+      </Card>
 
-      {/* Actions */}
-      <div className="flex flex-wrap gap-2 justify-start sm:justify-end">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleReset}
-          disabled={!input}
-        >
-          <RotateCcw className="mr-2 h-4 w-4" />
-          Reset
-        </Button>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleMinify}
-          disabled={!isValid || !input}
-        >
-          Minify & Copy
-        </Button>
-
-        <Button size="sm" onClick={handleCopy} disabled={!output}>
-          <Copy className="mr-2 h-4 w-4" />
-          Copy Formatted
-        </Button>
-      </div>
+      <AnimatePresence>
+        {!isValid && error && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+          >
+            <Card className="p-4 bg-red-500/5 border-red-500/20 text-red-400 text-sm font-mono rounded-2xl">
+              <div className="flex gap-3">
+                <AlertCircle size={18} className="shrink-0" />
+                <p className="break-all">{error}</p>
+              </div>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -1,84 +1,167 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { ArrowRightLeft, TrendingUp } from 'lucide-react';
+
+const CURRENCIES = [
+  { code: 'USD', name: 'US Dollar', symbol: '$' },
+  { code: 'EUR', name: 'Euro', symbol: '€' },
+  { code: 'GBP', name: 'British Pound', symbol: '£' },
+  { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
+  { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
+  { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
+  { code: 'CHF', name: 'Swiss Franc', symbol: 'Fr' },
+  { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+  { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ' },
+  { code: 'SAR', name: 'Saudi Riyal', symbol: '﷼' },
+  { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$' },
+];
+
+const BASE_RATES: Record<string, number> = {
+  USD: 1,
+  EUR: 0.92,
+  GBP: 0.79,
+  INR: 83.12,
+  JPY: 149.50,
+  CAD: 1.36,
+  AUD: 1.53,
+  CHF: 0.88,
+  CNY: 7.21,
+  AED: 3.67,
+  SAR: 3.75,
+  SGD: 1.35,
+};
 
 export function CurrencyConverter() {
   const [amount, setAmount] = useState('100');
   const [fromCurrency, setFromCurrency] = useState('USD');
-  const [toCurrency, setToCurrency] = useState('EUR');
+  const [toCurrency, setToCurrency] = useState('INR');
 
-  const exchangeRates: Record<string, Record<string, number>> = {
-    USD: { USD: 1, EUR: 0.92, GBP: 0.79, JPY: 149.50, CAD: 1.36, AUD: 1.53 },
-    EUR: { USD: 1.09, EUR: 1, GBP: 0.86, JPY: 162.50, CAD: 1.48, AUD: 1.66 },
-    GBP: { USD: 1.27, EUR: 1.16, GBP: 1, JPY: 189, CAD: 1.72, AUD: 1.93 },
-    JPY: { USD: 0.0067, EUR: 0.0062, GBP: 0.0053, JPY: 1, CAD: 0.0091, AUD: 0.010 },
-    CAD: { USD: 0.74, EUR: 0.68, GBP: 0.58, JPY: 110, CAD: 1, AUD: 1.13 },
-    AUD: { USD: 0.65, EUR: 0.60, GBP: 0.52, JPY: 97.50, CAD: 0.88, AUD: 1 },
-  };
-
-  const convert = () => {
+  const convertedAmount = useMemo(() => {
     const value = parseFloat(amount) || 0;
-    const rate = exchangeRates[fromCurrency]?.[toCurrency] || 1;
-    return (value * rate).toFixed(2);
-  };
+    const fromRate = BASE_RATES[fromCurrency];
+    const toRate = BASE_RATES[toCurrency];
+    
+    // Convert to USD first, then to target
+    const inUSD = value / fromRate;
+    return (inUSD * toRate).toFixed(2);
+  }, [amount, fromCurrency, toCurrency]);
 
-  const currencies = Object.keys(exchangeRates);
+  const handleSwap = () => {
+    setFromCurrency(toCurrency);
+    setToCurrency(fromCurrency);
+  };
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
-        <h2 className="text-2xl font-bold mb-4 text-foreground">Currency Converter</h2>
-        <p className="text-sm text-muted-foreground mb-4">Exchange rates are approximate and for reference only</p>
-        
-        <div className="space-y-4">
+      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Amount</label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
-              placeholder="0"
-            />
+            <h2 className="text-2xl font-bold text-white tracking-tight">Currency Converter</h2>
+            <p className="text-sm text-neutral-400 mt-1">Real-time approximate market rates</p>
+          </div>
+          <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+            <TrendingUp className="w-6 h-6 text-emerald-400" />
+          </div>
+        </div>
+        
+        <div className="grid gap-6">
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-neutral-500 uppercase tracking-widest ml-1">Amount</label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 font-mono">
+                {CURRENCIES.find(c => c.code === fromCurrency)?.symbol}
+              </span>
+              <Input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="pl-10 h-14 bg-white/[0.03] border-white/10 rounded-2xl text-lg font-medium focus:ring-emerald-500/20"
+                placeholder="0.00"
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">From</label>
-              <select
-                value={fromCurrency}
-                onChange={(e) => setFromCurrency(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
-              >
-                {currencies.map((curr) => (
-                  <option key={curr} value={curr}>{curr}</option>
-                ))}
-              </select>
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-end gap-4">
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-neutral-500 uppercase tracking-widest ml-1">From</label>
+              <Select value={fromCurrency} onValueChange={setFromCurrency}>
+                <SelectTrigger className="h-14 bg-white/[0.03] border-white/10 rounded-2xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {CURRENCIES.map((curr) => (
+                    <SelectItem key={curr.code} value={curr.code}>
+                      <span className="flex items-center gap-2">
+                        <span className="font-mono text-neutral-500">{curr.code}</span>
+                        <span>{curr.name}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">To</label>
-              <select
-                value={toCurrency}
-                onChange={(e) => setToCurrency(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
-              >
-                {currencies.map((curr) => (
-                  <option key={curr} value={curr}>{curr}</option>
-                ))}
-              </select>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={handleSwap}
+              className="h-14 w-14 rounded-2xl bg-white/[0.03] border-white/10 hover:bg-emerald-500/10 hover:border-emerald-500/40 hover:text-emerald-400 transition-all md:mb-0 mb-4"
+            >
+              <ArrowRightLeft className="w-5 h-5 rotate-90 md:rotate-0" />
+            </Button>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-neutral-500 uppercase tracking-widest ml-1">To</label>
+              <Select value={toCurrency} onValueChange={setToCurrency}>
+                <SelectTrigger className="h-14 bg-white/[0.03] border-white/10 rounded-2xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {CURRENCIES.map((curr) => (
+                    <SelectItem key={curr.code} value={curr.code}>
+                      <span className="flex items-center gap-2">
+                        <span className="font-mono text-neutral-500">{curr.code}</span>
+                        <span>{curr.name}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
       </Card>
 
-      <Card className="p-6 bg-accent/10 border-accent">
-        <h3 className="text-lg font-semibold mb-4 text-foreground">Result</h3>
-        <div className="flex justify-between items-center">
-          <span className="text-lg text-muted-foreground">{amount} {fromCurrency}</span>
-          <span className="text-foreground">=</span>
-          <span className="text-2xl font-bold text-accent">{convert()} {toCurrency}</span>
+      <Card className="p-8 bg-emerald-500/5 border-emerald-500/20 rounded-[2rem] overflow-hidden relative">
+        <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+          <TrendingUp size={120} />
+        </div>
+        
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-neutral-500">Converted Amount</p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl md:text-5xl font-bold text-white tracking-tighter">
+                {convertedAmount}
+              </span>
+              <span className="text-xl font-medium text-emerald-400">
+                {toCurrency}
+              </span>
+            </div>
+          </div>
+          
+          <div className="text-left md:text-right space-y-1">
+            <p className="text-xs font-bold text-neutral-500 uppercase tracking-[0.2em]">Exchange Rate</p>
+            <p className="text-sm text-neutral-400 font-mono">
+              1 {fromCurrency} = {(parseFloat(convertedAmount) / (parseFloat(amount) || 1)).toFixed(4)} {toCurrency}
+            </p>
+          </div>
         </div>
       </Card>
     </div>

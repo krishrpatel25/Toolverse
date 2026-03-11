@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Card } from '@/components/ui/card';
@@ -9,15 +9,45 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { TOOL_DEFINITIONS, getAllCategories } from '@/lib/tools/definitions';
 import { Icon, Search } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 
 function ToolsContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
+  const initialCategory = searchParams.get('category');
 
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const selectedCategory = initialCategory;
+
+  const handleCategorySelect = (category: string | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (category) {
+      params.set('category', category);
+    } else {
+      params.delete('category');
+    }
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  // Scroll active category into view
+  useEffect(() => {
+    if (selectedCategory && scrollContainerRef.current) {
+      const activeButton = scrollContainerRef.current.querySelector(
+        `[data-category="${selectedCategory}"]`
+      );
+      if (activeButton) {
+        activeButton.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center',
+        });
+      }
+    }
+  }, [selectedCategory]);
 
   const categories = getAllCategories();
 
@@ -77,24 +107,28 @@ function ToolsContent() {
                   <h3 className="font-semibold text-foreground mb-3 hidden lg:block">
                     Categories
                   </h3>
-                  <div className="flex flex-row overflow-x-auto pb-4 gap-2 lg:flex-col lg:pb-0 lg:gap-2 snap-x hide-scrollbar">
+                  <div 
+                    ref={scrollContainerRef}
+                    className="flex flex-row overflow-x-auto pb-4 gap-2 lg:flex-col lg:pb-0 lg:gap-2 snap-x hide-scrollbar"
+                  >
                     <Button
                       variant={
                         selectedCategory === null ? "default" : "outline"
                       }
                       className="whitespace-nowrap flex-shrink-0 lg:w-full lg:justify-start snap-start"
-                      onClick={() => setSelectedCategory(null)}
+                      onClick={() => handleCategorySelect(null)}
                     >
                       All Tools
                     </Button>
                     {categories.map((category) => (
                       <Button
                         key={category}
+                        data-category={category}
                         variant={
                           selectedCategory === category ? "default" : "outline"
                         }
                         className="whitespace-nowrap flex-shrink-0 lg:w-full lg:justify-start capitalize snap-start"
-                        onClick={() => setSelectedCategory(category)}
+                        onClick={() => handleCategorySelect(category)}
                       >
                         {category}
                       </Button>
@@ -171,7 +205,7 @@ function ToolsContent() {
                     variant="outline"
                     onClick={() => {
                       setSearchQuery("");
-                      setSelectedCategory(null);
+                      handleCategorySelect(null);
                     }}
                   >
                     Clear Filters

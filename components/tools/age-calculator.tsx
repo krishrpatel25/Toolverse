@@ -4,11 +4,11 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Copy } from "lucide-react";
+import { Calendar, Copy, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
 export function AgeCalculator() {
-  const [birthDate, setBirthDate] = useState("");
+  const [birthDate, setBirthDate] = useState("1995-01-01");
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -83,120 +83,77 @@ export function AgeCalculator() {
 
   return (
     <div className="space-y-6 w-full">
-      {/* Input */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Date of Birth</label>
+      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl font-bold text-white tracking-tight">Age Calculator</h2>
+            <p className="text-sm text-neutral-400 mt-1">Determine your exact age and next birthday</p>
+          </div>
+          <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+            <Calendar className="w-6 h-6 text-emerald-400" />
+          </div>
+        </div>
 
-        <Input
-          type="date"
-          value={birthDate}
-          onChange={(e) => setBirthDate(e.target.value)}
-          max={today}
-          className="py-6 text-base"
-        />
-      </div>
+        <div className="space-y-2">
+          <label className="text-xs font-bold text-neutral-500 uppercase tracking-widest ml-1">Date of Birth</label>
+          <Input
+            type="date"
+            value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)}
+            max={today}
+            className="h-14 bg-white/[0.03] border-white/10 rounded-2xl text-lg font-medium"
+          />
+        </div>
+      </Card>
 
       {age && (
-        <div className="space-y-4">
-          {/* Main Cards */}
-          <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
-            {/* Years */}
-            <Card
-              className="border bg-secondary/30 p-4 cursor-pointer hover:border-accent transition-colors"
-              onClick={() => handleCopy(age.years.toString())}
+        <div className="space-y-6">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+            <Card 
+              className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem] cursor-pointer hover:border-emerald-500/30 transition-all group"
+              onClick={() => handleCopy(`${age.years} Years`)}
             >
-              <div className="flex items-center justify-between">
+              <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-sm text-muted-foreground">Years</p>
-                  <p className="text-3xl font-bold">{age.years}</p>
+                  <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Age in Years</p>
+                  <p className="text-5xl font-bold text-white tracking-tighter">{age.years}</p>
+                  <p className="text-sm text-neutral-400 mt-2">{age.months} months, {age.days} days</p>
                 </div>
-                <Copy className="h-5 w-5 text-muted-foreground" />
+                <Copy className="text-neutral-600 group-hover:text-emerald-400 transition-colors" size={20} />
               </div>
             </Card>
 
-            {/* Detailed Age */}
-            <Card
-              className="border bg-secondary/30 p-4 cursor-pointer hover:border-accent transition-colors"
-              onClick={() =>
-                handleCopy(
-                  `${age.years} years, ${age.months} months, ${age.days} days`,
-                )
-              }
-            >
-              <p className="text-sm text-muted-foreground">Detailed Age</p>
-              <p className="text-lg font-mono font-bold">
-                {age.years}y {age.months}m {age.days}d
+            <Card className="p-8 bg-emerald-500/5 border-emerald-500/20 rounded-[2rem]">
+              <p className="text-xs font-bold text-emerald-500/60 uppercase tracking-widest mb-2">Next Birthday</p>
+              <p className="text-5xl font-bold text-emerald-400 tracking-tighter">
+                {nextBirthdayDays} <span className="text-2xl font-medium">Days</span>
               </p>
-            </Card>
-
-            {/* Days */}
-            <Card
-              className="border bg-secondary/30 p-4 cursor-pointer hover:border-accent transition-colors"
-              onClick={() => handleCopy(age.totalDays.toString())}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Days</p>
-                  <p className="text-2xl font-bold">
-                    {age.totalDays.toLocaleString()}
-                  </p>
-                </div>
-                <Copy className="h-5 w-5 text-muted-foreground" />
-              </div>
-            </Card>
-
-            {/* Hours */}
-            <Card
-              className="border bg-secondary/30 p-4 cursor-pointer hover:border-accent transition-colors"
-              onClick={() => handleCopy(age.hours.toString())}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Hours</p>
-                  <p className="text-2xl font-bold">
-                    {age.hours.toLocaleString()}
-                  </p>
-                </div>
-                <Copy className="h-5 w-5 text-muted-foreground" />
-              </div>
+              <p className="text-sm text-neutral-400 mt-2">Time to celebrate! 🎉</p>
             </Card>
           </div>
 
-          {/* Extra Info */}
-          <Card className="border bg-secondary/30 p-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              <div>
-                <p className="text-xs text-muted-foreground">Weeks</p>
-                <p className="text-lg font-bold">
-                  {age.weeks.toLocaleString()}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs text-muted-foreground">Minutes</p>
-                <p className="text-lg font-bold">
-                  {age.minutes.toLocaleString()}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs text-muted-foreground">Next Birthday</p>
-                <p className="text-lg font-bold text-accent">
-                  in {nextBirthdayDays} days 🎉
-                </p>
-              </div>
-            </div>
-          </Card>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+             {[
+               { label: 'Total Days', value: age.totalDays.toLocaleString() },
+               { label: 'Total Weeks', value: age.weeks.toLocaleString() },
+               { label: 'Total Hours', value: age.hours.toLocaleString() },
+               { label: 'Total Minutes', value: age.minutes.toLocaleString() },
+             ].map((stat) => (
+               <Card key={stat.label} className="p-6 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
+                  <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-1">{stat.label}</p>
+                  <p className="text-xl font-bold text-white">{stat.value}</p>
+               </Card>
+             ))}
+          </div>
         </div>
       )}
 
-      {!age && birthDate && (
-        <Card className="border bg-secondary/30 p-4">
-          <p className="text-sm text-muted-foreground">
-            Enter a valid birth date to see age calculations
-          </p>
-        </Card>
-      )}
+      <div className="flex gap-2 justify-end">
+        <Button variant="outline" onClick={() => setBirthDate('')} className="rounded-2xl border-white/10 hover:bg-white/5 h-12">
+          <RotateCcw className="mr-2 h-4 w-4" />
+          Clear Date
+        </Button>
+      </div>
     </div>
   );
 }

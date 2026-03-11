@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -10,17 +10,16 @@ import { copyToClipboard } from '@/lib/utils';
 
 export function XMLFormatter() {
   const [input, setInput] = useState('');
-  const [error, setError] = useState('');
-
-  const formatXML = (xmlString: string): string => {
+  const { result, error } = useMemo(() => {
+    if (!input.trim()) return { result: '', error: '' };
+    
     try {
-      setError('');
       const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+      const xmlDoc = parser.parseFromString(input, 'text/xml');
       
       const parseError = xmlDoc.getElementsByTagName('parsererror');
       if (parseError.length > 0) {
-        throw new Error(parseError[0].textContent || 'Invalid XML');
+        return { result: '', error: 'Invalid XML: ' + (parseError[0].textContent || 'Parsing error') };
       }
       
       const serializer = new XMLSerializer();
@@ -31,19 +30,18 @@ export function XMLFormatter() {
       const lines = formatted.split('\n');
       let indent = 0;
       
-      return lines.map(line => {
+      const formattedResult = lines.map(line => {
         if (line.match(/^<\/\w/)) indent = Math.max(0, indent - 1);
-        const result = '  '.repeat(indent) + line.trim();
+        const res = '  '.repeat(indent) + line.trim();
         if (line.match(/^<\w[^>]*[^/]>$/) && !line.match(/^</)) indent++;
-        return result;
+        return res;
       }).filter(l => l.trim()).join('\n');
-    } catch (err: any) {
-      setError('Invalid XML: ' + err.message);
-      return '';
-    }
-  };
 
-  const result = formatXML(input);
+      return { result: formattedResult, error: '' };
+    } catch (err: any) {
+      return { result: '', error: 'Invalid XML: ' + err.message };
+    }
+  }, [input]);
 
   const handleCopy = async () => {
     if (!result) return;

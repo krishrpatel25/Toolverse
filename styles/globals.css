@@ -36,5 +36,6 @@
     background: var(--bg-main);
     color: var(--text-main);
     font-family: ui-sans-serif, system-ui, sans-serif;
+    font-family: "Segoe UI", system-ui, sans-serif;
   }
 }

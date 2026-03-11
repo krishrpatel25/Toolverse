@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { ToolWrapper } from "@/components/tools/tool-wrapper";
@@ -88,12 +88,13 @@ import {
   AIContentWriter,
   SentimentAnalyzer,
 } from "@/components/tools/ai-tools";
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { ImageUpscaler } from "@/components/tools/image/image-upscaler";
+import { URLShortener } from "@/components/tools/url-shortener";
+import { BSOD } from "@/components/tools/bsod";
 
 // Tool component mapping
 const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
@@ -109,7 +110,7 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
   RandomText: RandomText,
   TextCompare: TextCompare,
   TextToSlug: TextToSlug,
-  // Developer Tools (13)
+  // Developer Tools (15)
   JSONFormatter: JSONFormatter,
   JSONValidator: JSONValidator,
   XMLFormatter: XMLFormatter,
@@ -117,12 +118,14 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
   Base64Decoder: Base64Decoder,
   URLEncoder: URLEncoder,
   URLDecoder: URLDecoder,
+  URLShortener: URLShortener,
   RegexTester: RegexTester,
   JWTDecoder: JWTDecoder,
   HTMLFormatter: HTMLFormatter,
   CSSMinifier: CSSMinifier,
   JSMinifier: JSMinifier,
   UUIDGenerator: UUIDGenerator,
+  BSOD: BSOD,
   // Calculator Tools (12)
   AgeCalculator: AgeCalculator,
   BMICalculator: BMICalculator,
@@ -183,9 +186,10 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
   SentimentAnalyzer: SentimentAnalyzer,
 };
 
-export default function ToolPage() {
-  const params = useParams();
-  const toolSlug = params.toolId as string;
+
+
+export default function ToolPage({ params }: { params: Promise<{ toolId: string }> }) {
+  const { toolId: toolSlug } = use(params);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -259,7 +263,7 @@ export default function ToolPage() {
       <main className="flex-1">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-20 pb-12">
           <Link
-            href="/tools"
+            href={`/tools?category=${tool.category}`}
             className="text-accent hover:text-accent/80 transition-colors mb-6 inline-flex items-center"
           >
             ← Back to Tools

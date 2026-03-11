@@ -166,7 +166,7 @@ pnpm tsc --noEmit
 
 ### Enable debug logging
 ```typescript
-console.log("[v0] Debug message", variable);
+console.log("[ToolVerse] Debug message", variable);
 ```
 
 ### React DevTools
