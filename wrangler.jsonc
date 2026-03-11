@@ -4,15 +4,4 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-09-27",
   "compatibility_flags": ["nodejs_compat"],
-
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      "service": "toolverse",
-    },
-  ],
 }
-
-git add wrangler.jsonc
-git commit -m "fix worker binding name"
-git push
