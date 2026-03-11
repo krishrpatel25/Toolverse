@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Copy, RotateCcw, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from '@/lib/utils';
 
 const LOWERCASE = 'abcdefghijklmnopqrstuvwxyz';
 const UPPERCASE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -53,10 +54,10 @@ export function PasswordGenerator() {
   };
 
   const handleCopy = async (password: string) => {
-    try {
-      await navigator.clipboard.writeText(password);
+    const success = await copyToClipboard(password);
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };

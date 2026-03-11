@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Copy, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from '@/lib/utils';
 
 export function Base64Decoder() {
   const [input, setInput] = useState('');
@@ -23,10 +24,10 @@ export function Base64Decoder() {
   })();
 
   const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
+    const success = await copyToClipboard(text);
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };

@@ -7,6 +7,8 @@ import { Copy } from 'lucide-react';
 import { toast } from 'sonner';
 import crypto from 'crypto';
 
+import { copyToClipboard } from '@/lib/utils';
+
 export function HashGenerator() {
   const [input, setInput] = useState('');
   const [hashes, setHashes] = useState<Record<string, string>>({});
@@ -22,9 +24,10 @@ export function HashGenerator() {
     setHashes(hashResults);
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast.success('Copied!');
+  const handleCopy = async (text: string) => {
+    const success = await copyToClipboard(text);
+    if (success) toast.success('Copied!');
+    else toast.error('Failed to copy');
   };
 
   return (
@@ -59,7 +62,7 @@ export function HashGenerator() {
                   </p>
                 </div>
                 <Button
-                  onClick={() => copyToClipboard(hash)}
+                  onClick={() => handleCopy(hash)}
                   variant="outline"
                   size="sm"
                   className="ml-2"

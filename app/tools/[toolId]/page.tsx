@@ -67,11 +67,18 @@ import {
 import {
   MetaTagGenerator,
   OpenGraphGenerator,
+  SitemapGenerator,
+  RobotsTxtGenerator,
+  KeywordDensity,
+  SerpPreview,
 } from "@/components/tools/seo-tools";
 import {
-  FileConverter,
-  FileCompressor,
-  FileToBase64,
+  CsvToJson,
+  JsonToCsv,
+  PdfMerger,
+  ZipExtractor,
+  TextToPdf,
+  ImageToPdf,
 } from "@/components/tools/file-tools";
 import {
   AITextGenerator,
@@ -153,13 +160,20 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
   ImageColorExtractor: ImageColorExtractor,
   InvertImageColors: InvertImageColors,
   BlackAndWhite: BlackAndWhite,
-  // File Tools (3)
-  FileConverter: FileConverter,
-  FileCompressor: FileCompressor,
-  FileToBase64: FileToBase64,
-  // SEO Tools (2)
+  // File Tools
+  CsvToJson: CsvToJson,
+  JsonToCsv: JsonToCsv,
+  PdfMerger: PdfMerger,
+  ZipExtractor: ZipExtractor,
+  TextToPdf: TextToPdf,
+  ImageToPdf: ImageToPdf,
+  // SEO Tools
   MetaTagGenerator: MetaTagGenerator,
   OpenGraphGenerator: OpenGraphGenerator,
+  SitemapGenerator: SitemapGenerator,
+  RobotsTxtGenerator: RobotsTxtGenerator,
+  KeywordDensity: KeywordDensity,
+  SerpPreview: SerpPreview,
   // AI Tools (4)
   AITextGenerator: AITextGenerator,
   TextSummarizer: TextSummarizer,
@@ -243,7 +257,7 @@ export default function ToolPage() {
     <>
       <Header />
       <main className="flex-1">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-20 pb-12">
           <Link
             href="/tools"
             className="text-accent hover:text-accent/80 transition-colors mb-6 inline-flex items-center"
@@ -252,9 +266,15 @@ export default function ToolPage() {
           </Link>
 
           {isLoading ? (
-            <div className="space-y-6">
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-96 w-full" />
+            <div className="space-y-8 animate-pulse">
+              <div className="flex items-start gap-4">
+                <div className="h-14 w-14 rounded-lg bg-white/5" />
+                <div className="flex-1 space-y-3">
+                  <div className="h-8 w-1/3 bg-white/5 rounded-lg" />
+                  <div className="h-4 w-2/3 bg-white/5 rounded-lg" />
+                </div>
+              </div>
+              <div className="h-[400px] w-full rounded-[2rem] bg-white/5 border border-white/5" />
             </div>
           ) : (
             <ToolWrapper tool={safeTool}>

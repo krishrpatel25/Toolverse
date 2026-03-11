@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Copy, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from '@/lib/utils';
 
 export function URLEncoder() {
   const [text, setText] = useState('');
@@ -22,10 +23,10 @@ export function URLEncoder() {
 
   const handleCopy = async () => {
     if (!result) return;
-    try {
-      await navigator.clipboard.writeText(result);
+    const success = await copyToClipboard(result);
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };

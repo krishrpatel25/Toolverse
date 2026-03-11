@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { RotateCcw, Copy } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from '@/lib/utils';
 
 export function WordCounter() {
   const [text, setText] = useState('');
@@ -22,10 +23,10 @@ export function WordCounter() {
   }, [text]);
 
   const handleCopy = async (stat: string, value: number) => {
-    try {
-      await navigator.clipboard.writeText(value.toString());
+    const success = await copyToClipboard(value.toString());
+    if (success) {
       toast.success(`Copied ${stat}: ${value}`);
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };

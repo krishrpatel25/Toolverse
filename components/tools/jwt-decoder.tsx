@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Copy, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from '@/lib/utils';
 
 export function JWTDecoder() {
   const [token, setToken] = useState('');
@@ -34,10 +35,10 @@ export function JWTDecoder() {
   };
 
   const handleCopy = async (data: any) => {
-    try {
-      await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+    const success = await copyToClipboard(JSON.stringify(data, null, 2));
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };

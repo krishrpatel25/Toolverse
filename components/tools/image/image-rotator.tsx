@@ -4,21 +4,19 @@ import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, RotateCw, Download, Trash2, Upload } from "lucide-react";
+import { RotateCcw, RotateCw, Download, Trash2, RefreshCw, Sparkles } from "lucide-react";
+import { ImageUploadCard } from "./image-upload-card";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function ImageRotator() {
+  const [imageName, setImageName] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [rotation, setRotation] = useState(0);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFile = (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please upload an image");
-      return;
-    }
-
+    setImageName(file.name);
     const url = URL.createObjectURL(file);
     setImage(url);
     setRotation(0);
@@ -30,6 +28,7 @@ export function ImageRotator() {
   const clearImage = () => {
     setImage(null);
     setRotation(0);
+    setImageName("");
   };
 
   useEffect(() => {
@@ -68,81 +67,88 @@ export function ImageRotator() {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "rotated-image.png";
+    a.download = `rotated-${imageName || 'image.png'}`;
     a.click();
   };
 
   return (
-    <div className="space-y-6">
-      {/* Upload UI */}
-
-      {!image && (
-        <Card className="p-10 border border-zinc-800 bg-zinc-900/40">
-          <div className="flex flex-col items-center gap-6 border-2 border-dashed border-zinc-700 hover:border-green-500 transition rounded-xl p-12 text-center">
-            <div className="p-4 bg-green-500/10 rounded-full">
-              <Upload className="w-8 h-8 text-green-500" />
-            </div>
-
-            <div>
-              <p className="text-lg font-semibold">Upload your image</p>
-
-              <p className="text-sm text-zinc-400">
-                Click the button below to select an image
-              </p>
-            </div>
-
-            <Button
-              className="bg-green-500 hover:bg-green-600 text-white"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              Choose Image
-            </Button>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                if (e.target.files?.length) {
-                  handleFile(e.target.files[0]);
-                }
-              }}
+    <div className="space-y-8">
+      <AnimatePresence mode="wait">
+        {!image ? (
+          <motion.div
+            key="upload"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+          >
+            <ImageUploadCard
+              onFileSelect={handleFile}
+              title="Image Rotator"
+              description="Rotate and align your visuals with elite precision"
             />
-          </div>
-        </Card>
-      )}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="preview"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="space-y-6"
+          >
+            <Card className="overflow-hidden border-white/10 bg-white/[0.02] p-2 sm:p-4">
+               <div className="relative group rounded-2xl overflow-hidden bg-black/40 flex justify-center">
+                  <canvas
+                    ref={canvasRef}
+                    className="max-h-[500px] max-w-full object-contain transition-transform duration-500"
+                  />
+              </div>
+            </Card>
 
-      {/* Preview */}
+            <Card className="p-6 border-white/10 bg-white/[0.02] space-y-6">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-emerald-500/10 rounded-lg">
+                  <RefreshCw className="w-5 h-5 text-emerald-500" />
+                </div>
+                <h3 className="text-lg font-bold text-white">Rotation Controls</h3>
+              </div>
 
-      {image && (
-        <Card className="p-6 flex flex-col items-center gap-6">
-          <div className="w-full flex justify-center">
-            <canvas
-              ref={canvasRef}
-              className="max-w-full max-h-[30vh] object-contain"
-            />
-          </div>
+              <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
+                <Button 
+                  onClick={rotateLeft}
+                  className="bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl h-12 px-6"
+                >
+                  <RotateCcw size={18} className="mr-2" />
+                  -90°
+                </Button>
 
-          <div className="flex gap-4 flex-wrap justify-center">
-            <Button size="icon" onClick={rotateLeft}>
-              <RotateCcw size={18} />
-            </Button>
+                <Button 
+                  onClick={rotateRight}
+                  className="bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl h-12 px-6"
+                >
+                   <RotateCw size={18} className="mr-2" />
+                  +90°
+                </Button>
 
-            <Button size="icon" onClick={rotateRight}>
-              <RotateCw size={18} />
-            </Button>
+                <Button 
+                  onClick={downloadImage}
+                  className="bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-widest px-8 rounded-xl h-12"
+                >
+                  <Download size={18} className="mr-2" />
+                  Download Result
+                </Button>
 
-            <Button size="icon" onClick={downloadImage}>
-              <Download size={18} />
-            </Button>
-
-            <Button size="icon" variant="destructive" onClick={clearImage}>
-              <Trash2 size={18} />
-            </Button>
-          </div>
-        </Card>
-      )}
+                <Button 
+                  variant="ghost" 
+                  onClick={clearImage}
+                  className="text-neutral-500 hover:text-red-400 hover:bg-red-400/5 rounded-xl h-12 ml-auto"
+                >
+                  <Trash2 size={18} className="mr-2" />
+                  Discard
+                </Button>
+              </div>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

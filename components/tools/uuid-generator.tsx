@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Copy, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
+import { copyToClipboard } from '@/lib/utils';
 
 function generateUUIDv4(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -28,25 +29,25 @@ export function UUIDGenerator() {
   };
 
   const handleCopyAll = async () => {
-    try {
-      const text = separator === 'newline' 
-        ? uuids.join('\n')
-        : separator === 'comma'
-        ? uuids.join(', ')
-        : uuids.join('');
-      
-      await navigator.clipboard.writeText(text);
+    const text = separator === 'newline' 
+      ? uuids.join('\n')
+      : separator === 'comma'
+      ? uuids.join(', ')
+      : uuids.join('');
+    
+    const success = await copyToClipboard(text);
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };
 
   const handleCopyOne = async (uuid: string) => {
-    try {
-      await navigator.clipboard.writeText(uuid);
+    const success = await copyToClipboard(uuid);
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };

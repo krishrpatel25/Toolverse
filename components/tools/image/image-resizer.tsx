@@ -4,7 +4,9 @@ import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, Download, Trash2, RotateCcw } from "lucide-react";
+import { Download, Trash2, RotateCcw, Maximize2, Sparkles } from "lucide-react";
+import { ImageUploadCard } from "./image-upload-card";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function ImageResizer() {
   const [image, setImage] = useState<File | null>(null);
@@ -12,15 +14,9 @@ export function ImageResizer() {
   const [width, setWidth] = useState<number>(800);
   const [height, setHeight] = useState<number>(600);
   const [resizedImage, setResizedImage] = useState<string | null>(null);
-
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [isResizing, setIsResizing] = useState(false);
 
   const handleUpload = (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please upload an image");
-      return;
-    }
-
     setImage(file);
     setPreview(URL.createObjectURL(file));
     setResizedImage(null);
@@ -28,6 +24,7 @@ export function ImageResizer() {
 
   const resizeImage = () => {
     if (!preview) return;
+    setIsResizing(true);
 
     const img = new Image();
     img.src = preview;
@@ -45,8 +42,9 @@ export function ImageResizer() {
 
       setPreview(resized);
       setResizedImage(resized);
+      setIsResizing(false);
 
-      toast.success(`Image resized to ${width} x ${height}`);
+      toast.success(`Elite resize complete: ${width} x ${height}`);
     };
   };
 
@@ -55,7 +53,7 @@ export function ImageResizer() {
 
     const a = document.createElement("a");
     a.href = resizedImage;
-    a.download = "resized-image.jpg";
+    a.download = `resized-${image?.name || 'image.jpg'}`;
     a.click();
   };
 
@@ -72,100 +70,108 @@ export function ImageResizer() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Upload UI */}
-
-      {!preview && (
-        <Card className="p-5 sm:p-8 lg:p-10 border border-zinc-800 bg-zinc-900/40">
-          <div className="flex flex-col items-center gap-4 sm:gap-6 border-2 border-dashed border-zinc-700 hover:border-green-500 transition rounded-xl p-6 sm:p-10 lg:p-12 text-center">
-            <div className="p-3 sm:p-4 bg-green-500/10 rounded-full">
-              <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-green-500" />
-            </div>
-
-            <div>
-              <p className="text-base sm:text-lg font-semibold">
-                Upload your image
-              </p>
-
-              <p className="text-xs sm:text-sm text-zinc-400">
-                Click the button below to select an image
-              </p>
-            </div>
-
-            <Button
-              className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              Choose Image
-            </Button>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                if (e.target.files?.length) {
-                  handleUpload(e.target.files[0]);
-                }
-              }}
+    <div className="space-y-8">
+      <AnimatePresence mode="wait">
+        {!preview ? (
+          <motion.div
+            key="upload"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+          >
+            <ImageUploadCard
+              onFileSelect={handleUpload}
+              title="Image Resizer"
+              description="Adjust dimensions with precision and elite performance"
             />
-          </div>
-        </Card>
-      )}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="preview"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="space-y-6"
+          >
+            <Card className="overflow-hidden border-white/10 bg-white/[0.02] p-2 sm:p-4">
+               <div className="relative group rounded-2xl overflow-hidden bg-black/40">
+                <img
+                  src={preview}
+                  className="max-h-[500px] w-full object-contain mx-auto transition-transform duration-500 group-hover:scale-[1.01]"
+                  alt="Preview"
+                />
+              </div>
+            </Card>
 
-      {/* Preview */}
+            <Card className="p-6 border-white/10 bg-white/[0.02] space-y-6">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-emerald-500/10 rounded-lg">
+                  <Maximize2 className="w-5 h-5 text-emerald-500" />
+                </div>
+                <h3 className="text-lg font-bold text-white">Dimension Settings</h3>
+              </div>
 
-      {preview && (
-        <Card className="p-6 flex flex-col items-center gap-6">
-          <img
-            src={preview}
-            className="max-w-full max-h-[60vh] object-contain"
-          />
+              <div className="flex flex-col sm:flex-row gap-6">
+                <div className="flex-1 space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-neutral-500">Width (px)</label>
+                  <input
+                    type="number"
+                    value={width}
+                    onChange={(e) => setWidth(Number(e.target.value))}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
+                  />
+                </div>
+                <div className="flex-1 space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-neutral-500">Height (px)</label>
+                  <input
+                    type="number"
+                    value={height}
+                    onChange={(e) => setHeight(Number(e.target.value))}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
+                  />
+                </div>
+              </div>
 
-          {/* Width / Height */}
+              <div className="flex flex-wrap gap-4 justify-center sm:justify-start pt-2">
+                <Button 
+                  onClick={resizeImage} 
+                  disabled={isResizing}
+                  className="bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-widest px-8 rounded-xl h-12"
+                >
+                  {isResizing ? "Resizing..." : "Resize Elite"}
+                  {!isResizing && <Sparkles size={16} className="ml-2" />}
+                </Button>
 
-          <div className="flex gap-4 flex-wrap justify-center">
-            <div className="flex flex-col">
-              <label className="text-sm">Width</label>
-              <input
-                type="number"
-                value={width}
-                onChange={(e) => setWidth(Number(e.target.value))}
-                className="border rounded px-2 py-1 w-28"
-              />
-            </div>
+                {resizedImage && (
+                  <Button 
+                    onClick={downloadImage}
+                    className="bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl h-12 px-6"
+                  >
+                    <Download size={18} className="mr-2" />
+                    Download
+                  </Button>
+                )}
 
-            <div className="flex flex-col">
-              <label className="text-sm">Height</label>
-              <input
-                type="number"
-                value={height}
-                onChange={(e) => setHeight(Number(e.target.value))}
-                className="border rounded px-2 py-1 w-28"
-              />
-            </div>
-          </div>
+                <Button 
+                  variant="ghost" 
+                  onClick={clearImage}
+                  className="text-neutral-500 hover:text-red-400 hover:bg-red-400/5 rounded-xl h-12"
+                >
+                  <Trash2 size={18} className="mr-2" />
+                  Discard
+                </Button>
 
-          {/* Buttons */}
-
-          <div className="flex gap-3 flex-wrap justify-center">
-            <Button onClick={resizeImage}>Resize</Button>
-
-            <Button onClick={downloadImage}>
-              <Download size={16} />
-            </Button>
-
-            <Button variant="secondary" onClick={resetSettings}>
-              <RotateCcw size={16} />
-            </Button>
-
-            <Button variant="destructive" onClick={clearImage}>
-              <Trash2 size={16} />
-            </Button>
-          </div>
-        </Card>
-      )}
+                <Button 
+                  variant="ghost" 
+                  onClick={resetSettings}
+                  className="text-neutral-500 hover:text-white hover:bg-white/5 rounded-xl h-12"
+                >
+                  <RotateCcw size={18} className="mr-2" />
+                </Button>
+              </div>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Copy, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from '@/lib/utils';
 
 export function XMLFormatter() {
   const [input, setInput] = useState('');
@@ -17,8 +18,9 @@ export function XMLFormatter() {
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
       
-      if (xmlDoc.parseError && (xmlDoc.parseError as any).errorCode !== 0) {
-        throw new Error('Invalid XML');
+      const parseError = xmlDoc.getElementsByTagName('parsererror');
+      if (parseError.length > 0) {
+        throw new Error(parseError[0].textContent || 'Invalid XML');
       }
       
       const serializer = new XMLSerializer();
@@ -45,10 +47,10 @@ export function XMLFormatter() {
 
   const handleCopy = async () => {
     if (!result) return;
-    try {
-      await navigator.clipboard.writeText(result);
+    const success = await copyToClipboard(result);
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };

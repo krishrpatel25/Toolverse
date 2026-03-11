@@ -59,7 +59,7 @@ export default async function CategoryPage({
       <Header />
 
       <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-12 md:pt-26">
           {/* Header */}
           <div className="mb-12">
             <h1 className="text-4xl font-bold text-foreground mb-2">
@@ -92,6 +92,16 @@ export default async function CategoryPage({
                       <p className="text-sm text-neutral-400 font-light mb-4 flex-grow">
                         {tool.description}
                       </p>
+                      {/* --- DYNAMIC ICON WATERMARK --- */}
+                      <div className="absolute -bottom-0 -right-6 text-white/8 group-hover:text-emerald-500/8 transition-all duration-700 ">
+                        <Icon
+                          size={90}
+                          strokeWidth={
+                            2
+                          } /* Thinner stroke looks more premium at large sizes */
+                          className="transition-all"
+                        />
+                      </div>
 
                       <div className="flex items-center text-emerald-400 text-sm group-hover:translate-x-1 transition-transform mt-auto">
                         Use Tool <ArrowRight className="ml-1 h-4 w-4" />

@@ -3,18 +3,20 @@
 import { useState, useRef } from "react";
 import ReactCrop, { Crop, centerCrop, makeAspectCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, Download, Trash2, RotateCcw } from "lucide-react";
+import { Download, Trash2, RotateCcw, Crop as CropIcon, Sparkles } from "lucide-react";
+import { ImageUploadCard } from "./image-upload-card";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function ImageCropper() {
+  const [imageName, setImageName] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [crop, setCrop] = useState<Crop>();
   const [aspect, setAspect] = useState<number | undefined>(1);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const imgRef = useRef<HTMLImageElement | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   function centerAspectCrop(
     mediaWidth: number,
@@ -37,12 +39,12 @@ export function ImageCropper() {
   }
 
   const handleUpload = (file: File) => {
+    setImageName(file.name);
     setImage(URL.createObjectURL(file));
   };
 
   const onImageLoad = (e: any) => {
     const { width, height } = e.currentTarget;
-
     if (aspect) {
       setCrop(centerAspectCrop(width, height, aspect));
     }
@@ -50,11 +52,8 @@ export function ImageCropper() {
 
   const changeRatio = (ratio: number | undefined) => {
     setAspect(ratio);
-
     if (!imgRef.current) return;
-
     const { width, height } = imgRef.current;
-
     if (ratio) {
       setCrop(centerAspectCrop(width, height, ratio));
     } else {
@@ -70,6 +69,7 @@ export function ImageCropper() {
 
   const downloadCrop = () => {
     if (!imgRef.current || !crop) return;
+    setIsProcessing(true);
 
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d")!;
@@ -93,125 +93,139 @@ export function ImageCropper() {
     );
 
     const url = canvas.toDataURL();
-
     const a = document.createElement("a");
     a.href = url;
-    a.download = "cropped-image.png";
+    a.download = `cropped-${imageName || 'image.png'}`;
     a.click();
+    setIsProcessing(false);
   };
 
   const clearImage = () => {
     setImage(null);
     setCrop(undefined);
+    setImageName("");
   };
 
   const resetCrop = () => {
     if (!imgRef.current) return;
-
     const { width, height } = imgRef.current;
-
     if (aspect) {
       setCrop(centerAspectCrop(width, height, aspect));
     }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Upload UI */}
-
-      {!image && (
-        <Card className="p-5 sm:p-8 lg:p-10 border border-zinc-800 bg-zinc-900/40">
-          <div className="flex flex-col items-center gap-4 sm:gap-6 border-2 border-dashed border-zinc-700 hover:border-green-500 transition rounded-xl p-6 sm:p-10 lg:p-12 text-center">
-            <div className="p-3 sm:p-4 bg-green-500/10 rounded-full">
-              <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-green-500" />
-            </div>
-
-            <div>
-              <p className="text-base sm:text-lg font-semibold">
-                Upload your image
-              </p>
-
-              <p className="text-xs sm:text-sm text-zinc-400">
-                Click the button below to select an image
-              </p>
-            </div>
-
-            <Button
-              className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              Choose Image
-            </Button>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                if (e.target.files?.length) {
-                  handleUpload(e.target.files[0]);
-                }
-              }}
+    <div className="space-y-8">
+      <AnimatePresence mode="wait">
+        {!image ? (
+          <motion.div
+            key="upload"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+          >
+            <ImageUploadCard
+              onFileSelect={handleUpload}
+              title="Image Cropper"
+              description="Frame your elite visuals with surgical precision"
             />
-          </div>
-        </Card>
-      )}
-
-      {/* Crop UI */}
-
-      {image && (
-        <Card className="p-6 space-y-6">
-          <div className="flex justify-center">
-            <div className="w-full max-w-md">
-              <div className="flex justify-center items-center h-auto overflow-hidden">
+          </motion.div>
+        ) : (
+          <motion.div
+            key="preview"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="space-y-6"
+          >
+            <Card className="overflow-hidden border-white/10 bg-white/[0.02] p-2 sm:p-4">
+               <div className="relative group rounded-2xl overflow-hidden bg-black/40 flex justify-center">
                 <ReactCrop
                   crop={crop}
                   onChange={(c) => setCrop(c)}
                   aspect={aspect}
+                  className="max-h-[500px]"
                 >
                   <img
                     ref={imgRef}
                     src={image}
                     onLoad={onImageLoad}
-                    className="max-h-auto max-w-full object-contain"
+                    className="max-h-[500px] w-full object-contain mx-auto"
+                    alt="Crop preview"
                   />
                 </ReactCrop>
               </div>
-            </div>
-          </div>
+            </Card>
 
-          {/* Ratio Buttons */}
+            <Card className="p-6 border-white/10 bg-white/[0.02] space-y-6">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-emerald-500/10 rounded-lg">
+                  <CropIcon className="w-5 h-5 text-emerald-500" />
+                </div>
+                <h3 className="text-lg font-bold text-white">Crop Controls</h3>
+              </div>
 
-          <div className="flex flex-wrap gap-2 justify-center">
-            <Button onClick={() => changeRatio(1)}>1:1</Button>
-            <Button onClick={() => changeRatio(4 / 3)}>4:3</Button>
-            <Button onClick={() => changeRatio(16 / 9)}>16:9</Button>
-            <Button onClick={() => changeRatio(3 / 2)}>3:2</Button>
-            <Button onClick={() => changeRatio(9 / 16)}>9:16</Button>
-            <Button onClick={() => changeRatio(undefined)}>Free</Button>
-          </div>
+              <div className="space-y-6">
+                 <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                    <RatioButton label="1:1" active={aspect === 1} onClick={() => changeRatio(1)} />
+                    <RatioButton label="4:3" active={aspect === 4/3} onClick={() => changeRatio(4/3)} />
+                    <RatioButton label="16:9" active={aspect === 16/9} onClick={() => changeRatio(16/9)} />
+                    <RatioButton label="3:2" active={aspect === 3/2} onClick={() => changeRatio(3/2)} />
+                    <RatioButton label="9:16" active={aspect === 9/16} onClick={() => changeRatio(9/16)} />
+                    <RatioButton label="Free" active={aspect === undefined} onClick={() => changeRatio(undefined)} />
+                 </div>
 
-          {/* Controls */}
+                 <div className="flex flex-wrap gap-4 justify-center sm:justify-start pt-2 border-t border-white/5 pt-6">
+                    <Button 
+                      onClick={downloadCrop}
+                      disabled={isProcessing}
+                      className="bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-widest px-8 rounded-xl h-12"
+                    >
+                      {isProcessing ? "Processing..." : "Download Crop"}
+                      {!isProcessing && <Download size={16} className="ml-2" />}
+                    </Button>
 
-          <div className="flex gap-3 justify-center flex-wrap">
-            <Button onClick={downloadCrop}>
-              <Download size={16} />
-              Download
-            </Button>
+                    <Button 
+                      variant="ghost" 
+                      onClick={resetCrop}
+                      className="text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl h-12"
+                    >
+                      <RotateCcw size={18} className="mr-2" />
+                      Reset
+                    </Button>
 
-            <Button variant="secondary" onClick={resetCrop}>
-              <RotateCcw size={16} />
-              Reset
-            </Button>
-
-            <Button variant="destructive" onClick={clearImage}>
-              <Trash2 size={16} />
-              Clear
-            </Button>
-          </div>
-        </Card>
-      )}
+                    <Button 
+                      variant="ghost" 
+                      onClick={clearImage}
+                      className="text-neutral-500 hover:text-red-400 hover:bg-red-400/5 rounded-xl h-12 ml-auto"
+                    >
+                      <Trash2 size={18} className="mr-2" />
+                      Discard
+                    </Button>
+                 </div>
+              </div>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
+
+function RatioButton({ label, active, onClick }: { label: string, active: boolean, onClick: () => void }) {
+  return (
+    <Button
+      variant="ghost"
+      onClick={onClick}
+      className={cn(
+        "h-10 px-4 rounded-xl border transition-all",
+        active 
+          ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-500 font-bold" 
+          : "border-white/5 bg-white/5 text-neutral-400 hover:text-white hover:border-white/10"
+      )}
+    >
+      {label}
+    </Button>
+  );
+}
+
+import { cn } from "@/lib/utils";

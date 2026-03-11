@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Copy, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from '@/lib/utils';
 
 type CaseType = 'uppercase' | 'lowercase' | 'titlecase' | 'sentencecase' | 'camelcase' | 'snakecase' | 'kebabcase';
 
@@ -49,10 +50,10 @@ export function CaseConverter() {
   const output = convertCase(input, selectedCase);
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
+    const success = await copyToClipboard(output);
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };

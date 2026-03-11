@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, Download, RotateCcw } from "lucide-react";
-import { toast } from "sonner";
+import { Download, RotateCcw } from "lucide-react";
+import { ImageUploadCard } from "./image-upload-card";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
   toolName: string;
@@ -19,15 +20,19 @@ export const ImageToolComponent = ({
 }: Props) => {
   const [result, setResult] = useState<string | null>(null);
   const [fileName, setFileName] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleFile = (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please upload an image");
-      return;
-    }
-
+    setIsProcessing(true);
     setFileName(file.name);
-    onProcess(file, setResult);
+    
+    // Simulate slight delay for elite feel
+    setTimeout(() => {
+      onProcess(file, (url) => {
+        setResult(url);
+        setIsProcessing(false);
+      });
+    }, 600);
   };
 
   const reset = () => {
@@ -36,54 +41,68 @@ export const ImageToolComponent = ({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Upload Card */}
+    <div className="space-y-8">
+      <AnimatePresence mode="wait">
+        {!result ? (
+          <motion.div
+            key="upload"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+          >
+            <ImageUploadCard
+              onFileSelect={handleFile}
+              title={toolName}
+              description={isProcessing ? "Processing elite results..." : undefined}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="result"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="space-y-6"
+          >
+            <Card className="overflow-hidden border-white/10 bg-white/[0.02] p-2 sm:p-4">
+              <div className="relative group rounded-2xl overflow-hidden bg-black/40">
+                <img
+                  src={result}
+                  className="max-h-[500px] w-full object-contain mx-auto transition-transform duration-500 group-hover:scale-[1.02]"
+                  alt="Processed results"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                   <p className="text-xs font-medium text-white/60 tracking-wider uppercase">
+                     {fileName}
+                   </p>
+                </div>
+              </div>
+            </Card>
 
-      <Card className="p-6 text-center">
-        <h2 className="text-2xl font-bold mb-4">{toolName}</h2>
-
-        <label className="cursor-pointer block border-2 border-dashed p-8 rounded-lg hover:border-green-500 transition">
-          <Upload className="mx-auto mb-3" />
-
-          <p>Upload Image</p>
-
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => {
-              if (e.target.files?.length) {
-                handleFile(e.target.files[0]);
-              }
-            }}
-          />
-        </label>
-      </Card>
-
-      {/* Result */}
-
-      {result && (
-        <Card className="p-6 text-center space-y-4">
-          <img src={result} className="max-h-[400px] mx-auto object-contain" />
-
-          <p className="text-sm text-muted-foreground">{fileName}</p>
-
-          <div className="flex justify-center gap-4">
-            {allowDownload && (
-              <a href={result} download="processed-image">
-                <Button>
-                  <Download size={16} />
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+              {allowDownload && (
+                <Button 
+                  asChild
+                  className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-xl h-12 px-8"
+                >
+                  <a href={result} download={`toolverse-${fileName || 'image'}`}>
+                    <Download size={18} className="mr-2" />
+                    Download Result
+                  </a>
                 </Button>
-              </a>
-            )}
+              )}
 
-            <Button variant="destructive" onClick={reset}>
-              <RotateCcw size={16} />
-              Reset
-            </Button>
-          </div>
-        </Card>
-      )}
+              <Button
+                variant="outline"
+                onClick={reset}
+                className="w-full sm:w-auto border-white/10 bg-white/5 hover:bg-white/10 text-white rounded-xl h-12 px-8"
+              >
+                <RotateCcw size={18} className="mr-2" />
+                Start Over
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

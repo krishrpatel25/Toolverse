@@ -17,9 +17,21 @@
   }
 }
 
+
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer components {
   .tool-card {
-    @apply bg-neutral-900/30 backdrop-blur-sm border border-neutral-800 rounded-[2rem] p-6 sm:p-8 hover:border-emerald-500/40 transition-all duration-300 overflow-hidden relative;
+    @apply bg-neutral-900/30 backdrop-blur-sm border border-neutral-800 rounded-[2rem] p-6 sm:p-8 hover:border-emerald-500/40 transition-all duration-300 overflow-hidden relative flex flex-col;
   }
 
   .tool-card::before {
@@ -154,3 +166,4 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
+

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Copy, RotateCcw, CheckCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { copyToClipboard } from "@/lib/utils";
 
 export function JSONFormatter() {
   const [input, setInput] = useState("");
@@ -37,10 +38,10 @@ export function JSONFormatter() {
   }, [input, indent]);
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
+    const success = await copyToClipboard(output);
+    if (success) {
       toast.success("Copied to clipboard");
-    } catch {
+    } else {
       toast.error("Failed to copy");
     }
   };
@@ -50,8 +51,12 @@ export function JSONFormatter() {
       const parsed = JSON.parse(input);
       const minified = JSON.stringify(parsed);
 
-      await navigator.clipboard.writeText(minified);
-      toast.success("Minified & copied");
+      const success = await copyToClipboard(minified);
+      if (success) {
+        toast.success("Minified & copied");
+      } else {
+        toast.error("Failed to copy minified JSON");
+      }
     } catch {
       toast.error("Invalid JSON");
     }

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { RotateCcw, Copy } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from '@/lib/utils';
 
 export function RemoveSpaces() {
   const [text, setText] = useState('');
@@ -29,10 +30,10 @@ export function RemoveSpaces() {
   const result = processText();
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(result);
+    const success = await copyToClipboard(result);
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };

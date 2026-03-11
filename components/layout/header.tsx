@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Command, Sparkles, Heart, Menu, X } from "lucide-react";
+import { Sparkles, Heart, Menu, X } from "lucide-react";
 import {
   motion,
   AnimatePresence,
@@ -27,15 +28,17 @@ export default function Header() {
             href="/"
             className="flex items-center gap-2 md:gap-3 bg-[#0A0A0A]/90 border border-white/5 p-1.5 md:p-2 rounded-xl md:rounded-2xl transition-all shadow-2xl matte-inner-glow"
           >
-            <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl bg-emerald-500 text-black shadow-[0_0_15px_rgba(16,185,129,0.3)] group-hover:rotate-[10deg]">
-              <Command
-                size={18}
-                className="md:w-[22px] md:h-[22px]"
-                strokeWidth={2.5}
+            <div className="relative flex h-8 w-8 md:h-10 md:w-10 items-center justify-center ">
+              <Image
+                src="/toolverse_logo.png"
+                alt="ToolVerse Logo"
+                fill
+                className="object-contain"
+                priority
               />
             </div>
-            <span className="text-white font-black tracking-tighter text-sm md:text-lg pr-2">
-              TOOLVERSE
+            <span className="text-white font-extrabold tracking-tight text-sm md:text-lg pr-2">
+              Tool<span className="text-emerald-500">Verse</span>
             </span>
           </Link>
         </motion.div>
@@ -50,7 +53,7 @@ export default function Header() {
             <NavButton
               href="/tools"
               icon={<Sparkles size={15} />}
-              label="Tools"
+              label="All Tools"
             />
             <NavButton
               href="/favorites"

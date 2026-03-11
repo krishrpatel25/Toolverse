@@ -14,6 +14,8 @@ interface ToolWrapperProps {
   children: React.ReactNode;
 }
 
+import { copyToClipboard } from "@/lib/utils";
+
 export function ToolWrapper({ tool, children }: ToolWrapperProps) {
   const { isFavorite, toggleFavorite, isLoaded } = useFavorites();
   const [mounted, setMounted] = useState(false);
@@ -26,18 +28,24 @@ export function ToolWrapper({ tool, children }: ToolWrapperProps) {
 
   const handleShare = async () => {
     try {
-      if (navigator.share) {
+      if (typeof navigator !== 'undefined' && navigator.share) {
         await navigator.share({
           title: tool.name,
           text: tool.description,
           url: window.location.href,
         });
       } else {
-        await navigator.clipboard.writeText(window.location.href);
-        toast.success("Link copied to clipboard");
+        const success = await copyToClipboard(window.location.href);
+        if (success) {
+          toast.success("Link copied to clipboard");
+        } else {
+          toast.error("Failed to copy link");
+        }
       }
-    } catch {
-      toast.error("Failed to share");
+    } catch (err) {
+      if ((err as Error).name !== 'AbortError') {
+        toast.error("Failed to share");
+      }
     }
   };
 

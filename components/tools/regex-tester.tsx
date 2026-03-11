@@ -7,12 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Copy } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from '@/lib/utils';
 
 export function RegexTester() {
   const [pattern, setPattern] = useState('');
   const [text, setText] = useState('');
   const [flags, setFlags] = useState('g');
-  const [matches, setMatches] = useState<RegExpExecArray[]>([]);
+  const [matches, setMatches] = useState<string[][]>([]);
   const [error, setError] = useState('');
 
   const test = () => {
@@ -23,7 +24,7 @@ export function RegexTester() {
       if (!pattern) return;
       
       const regex = new RegExp(pattern, flags);
-      const allMatches: RegExpExecArray[] = [];
+      const allMatches: string[][] = [];
       let match;
       
       if (flags.includes('g')) {
@@ -42,10 +43,10 @@ export function RegexTester() {
   };
 
   const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
+    const success = await copyToClipboard(text);
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };

@@ -7,7 +7,9 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Heart, ExternalLink } from 'lucide-react';
+import { ActionTooltip } from '@/components/ui/action-tooltip';
 import { TOOL_DEFINITIONS } from '@/lib/tools/definitions';
+import { ToolGridSkeleton } from '@/components/ui/tool-skeleton';
 
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -29,8 +31,12 @@ export default function FavoritesPage() {
       <>
         <Header />
         <main className="flex-1">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-            <p className="text-muted-foreground">Loading...</p>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-12 md:pt-24">
+            <div className="mb-12">
+              <h1 className="text-4xl font-bold text-foreground mb-2">My Favorites</h1>
+              <div className="h-6 w-32 bg-white/5 animate-pulse rounded" />
+            </div>
+            <ToolGridSkeleton count={3} />
           </div>
         </main>
         <Footer />
@@ -42,7 +48,7 @@ export default function FavoritesPage() {
     <>
       <Header />
       <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-12 md:pt-24">
           <div className="mb-12">
             <h1 className="text-4xl font-bold text-foreground mb-2">My Favorites</h1>
             <p className="text-lg text-muted-foreground">
@@ -64,7 +70,7 @@ export default function FavoritesPage() {
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {favoriteTools.map((tool) => (
-                <Card key={tool.slug} className="tool-card h-full">
+                <Card key={tool.slug} className="tool-card h-full rounded-[2rem]">
                   <div className="flex items-start justify-between mb-4 relative z-10 w-full">
                     <div className="flex-1">
                       <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">{tool.name}</h3>

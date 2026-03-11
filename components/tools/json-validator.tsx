@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Copy, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from '@/lib/utils';
 
 export function JSONValidator() {
   const [json, setJson] = useState('');
@@ -21,10 +22,10 @@ export function JSONValidator() {
   };
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(json);
+    const success = await copyToClipboard(json);
+    if (success) {
       toast.success('Copied to clipboard');
-    } catch {
+    } else {
       toast.error('Failed to copy');
     }
   };
