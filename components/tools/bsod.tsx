@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Monitor, Maximize2, AlertTriangle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Monitor, Maximize2, AlertTriangle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function BSOD() {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -17,8 +17,11 @@ export function BSOD() {
     setProgress(0);
 
     const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) { clearInterval(interval); return 100; }
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
         // Mostly slow +1, occasional +2 jumps, rare bigger jump
         const r = Math.random();
         const step = r > 0.95 ? 3 : r > 0.7 ? 2 : 1;
@@ -32,9 +35,9 @@ export function BSOD() {
   const enterFullscreen = async () => {
     try {
       await document.documentElement.requestFullscreen();
-    } catch { }
-    document.body.style.cursor = 'none';
-    document.body.style.overflow = 'hidden';
+    } catch {}
+    document.body.style.cursor = "none";
+    document.body.style.overflow = "hidden";
     setShowExit(false);
     setIsFullscreen(true);
   };
@@ -42,9 +45,9 @@ export function BSOD() {
   const exitFullscreen = async () => {
     try {
       if (document.fullscreenElement) await document.exitFullscreen();
-    } catch { }
-    document.body.style.cursor = '';
-    document.body.style.overflow = '';
+    } catch {}
+    document.body.style.cursor = "";
+    document.body.style.overflow = "";
     setShowExit(false);
     setIsFullscreen(false);
   };
@@ -53,14 +56,14 @@ export function BSOD() {
   useEffect(() => {
     const onFsChange = () => {
       if (!document.fullscreenElement) {
-        document.body.style.cursor = '';
-        document.body.style.overflow = '';
+        document.body.style.cursor = "";
+        document.body.style.overflow = "";
         setShowExit(false);
         setIsFullscreen(false);
       }
     };
-    document.addEventListener('fullscreenchange', onFsChange);
-    return () => document.removeEventListener('fullscreenchange', onFsChange);
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
   }, []);
 
   // Show cursor + X when mouse near top edge (within 80px)
@@ -68,11 +71,11 @@ export function BSOD() {
     if (!isFullscreen) return;
     const onMove = (e: MouseEvent) => {
       const nearTop = e.clientY < 80;
-      document.body.style.cursor = nearTop ? 'default' : 'none';
+      document.body.style.cursor = nearTop ? "default" : "none";
       setShowExit(nearTop);
     };
-    window.addEventListener('mousemove', onMove);
-    return () => window.removeEventListener('mousemove', onMove);
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
   }, [isFullscreen]);
 
   return (
@@ -176,7 +179,10 @@ export function BSOD() {
       {/* Instructions */}
       <Card className="p-5 bg-emerald-500/5 border-emerald-500/20 rounded-2xl">
         <div className="flex items-start gap-3">
-          <AlertTriangle size={16} className="text-emerald-400 mt-0.5 shrink-0" />
+          <AlertTriangle
+            size={16}
+            className="text-emerald-400 mt-0.5 shrink-0"
+          />
           <p className="text-xs text-neutral-400 leading-relaxed">
             Click the preview or button to launch. The screen will fill your
             entire display. To exit, press{" "}
