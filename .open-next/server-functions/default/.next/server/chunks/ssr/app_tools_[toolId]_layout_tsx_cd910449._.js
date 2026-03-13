@@ -1,3 +1,0 @@
-module.exports=[20834,a=>{"use strict";var b=a.i(35138);async function c({params:a}){let{toolId:c}=await a,d=(0,b.getToolBySlug)(c);return d?{title:`${d.name} - ToolVerse | Free Online Tool`,description:d.description,keywords:[...d.tags,"free tool","online tool","free online tool"],openGraph:{title:`${d.name} - ToolVerse`,description:d.description,type:"website",url:`https://toolverse.app/tools/${d.slug}`}}:{title:"Tool Not Found - ToolVerse",description:"The tool you are looking for does not exist."}}function d({children:a}){return a}a.s(["default",()=>d,"generateMetadata",()=>c])}];
-
-//# sourceMappingURL=app_tools_%5BtoolId%5D_layout_tsx_cd910449._.js.map
