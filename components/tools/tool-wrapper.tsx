@@ -155,7 +155,7 @@ export function ToolWrapper({ tool, children }: ToolWrapperProps) {
         transition={{ delay: 0.1 }}
       >
         <Card className="border border-border bg-card p-4 sm:p-6 overflow-hidden">
-          <div className="w-full overflow-x-auto">{children}</div>
+          <div className="w-full">{children}</div>
         </Card>
       </motion.div>
 

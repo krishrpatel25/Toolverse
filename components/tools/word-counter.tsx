@@ -47,37 +47,22 @@ export function WordCounter() {
   ];
 
   return (
-    <div className="space-y-6">
-      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-             <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
-              <FileText className="w-6 h-6 text-emerald-400" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Word Counter</h2>
-              <p className="text-sm text-neutral-400">Deep analysis of your text content</p>
-            </div>
-          </div>
-          {text && (
-            <Button 
-               variant="outline" 
-               onClick={handleReset}
-               className="border-white/10 hover:bg-white/5 rounded-xl h-10 px-4 text-neutral-400"
-            >
-              <RotateCcw size={16} className="mr-2" />
-              Reset
-            </Button>
-          )}
-        </div>
+    <div className="space-y-5">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <p className="text-xs text-neutral-500">Paste your text below for instant analysis</p>
+        {text && (
+          <Button variant="outline" size="sm" onClick={handleReset} className="border-white/10 text-neutral-400">
+            <RotateCcw size={13} className="mr-1.5" /> Reset
+          </Button>
+        )}
+      </div>
 
-        <Textarea
-          placeholder="Paste your text here to analyze..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="min-h-[250px] bg-white/[0.03] border-white/10 rounded-2xl p-6 font-mono text-sm focus:border-emerald-500/50 transition-colors resize-none"
-        />
-      </Card>
+      <Textarea
+        placeholder="Paste your text here to analyze..."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        className="min-h-[220px] bg-white/[0.03] border-white/10 rounded-xl p-4 font-mono text-sm focus:border-emerald-500/50 resize-none w-full"
+      />
 
       <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
         {statCards.map((stat) => (
@@ -103,12 +88,10 @@ export function WordCounter() {
         ))}
       </div>
 
-      <Card className="p-6 bg-emerald-500/5 border-emerald-500/20 rounded-[2rem]">
-        <p className="text-sm text-neutral-400 flex items-center gap-2">
-          <span className="p-1 bg-emerald-500/20 rounded-md"><Sparkles size={12} className="text-emerald-400" /></span>
-          Click any card to copy its value instantly to your clipboard.
-        </p>
-      </Card>
+      <p className="text-xs text-neutral-500 flex items-center gap-1.5">
+        <Sparkles size={11} className="text-emerald-400" />
+        Click any stat card to copy its value.
+      </p>
     </div>
   );
 }
