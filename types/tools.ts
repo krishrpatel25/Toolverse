@@ -10,7 +10,11 @@ export interface Tool {
   component: string;
   tags: string[];
   usageCount?: number;
+  createdAt?: Date;
+  seoContent?: string;
+  faqs?: { q: string; a: string }[];
 }
+
 export type ToolCategory =
   | "text"
   | "developer"
@@ -20,22 +24,6 @@ export type ToolCategory =
   | "file"
   | "seo"
   | "ai";
-
-export interface Tool {
-  id: string;
-  name: string;
-  description: string;
-  category: ToolCategory;
-
-  // CHANGE THIS
-  icon: LucideIcon;
-
-  slug: string;
-  component: string;
-  tags: string[];
-  usageCount?: number;
-  createdAt?: Date;
-}
 
 export interface User {
   id: string;

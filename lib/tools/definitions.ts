@@ -1,4 +1,5 @@
 import type { Tool } from "@/types/tools";
+import { TOOL_SEO_DATA } from "./seo-data";
 import {
   // Text tools
   FileText,
@@ -76,7 +77,7 @@ import {
   Monitor,
 } from "lucide-react";
 
-export const TOOL_DEFINITIONS: Tool[] = [
+const _RAW_TOOL_DEFINITIONS: Tool[] = [
   
   // Text Tools (11)
   {
@@ -1005,6 +1006,12 @@ export const TOOL_DEFINITIONS: Tool[] = [
     usageCount: 0,
   },
 ];
+
+// Merge SEO content + FAQs into each tool definition
+export const TOOL_DEFINITIONS: Tool[] = _RAW_TOOL_DEFINITIONS.map((tool: Tool) => ({
+  ...tool,
+  ...(TOOL_SEO_DATA[tool.slug] ?? {}),
+}));
 
 export function getToolBySlug(slug: string): Tool | undefined {
   return TOOL_DEFINITIONS.find((tool) => tool.slug === slug);
