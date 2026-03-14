@@ -61,7 +61,7 @@ function JSONNode({ data, depth = 0 }: { data: any; depth?: number }) {
 
   if (data === null) return <span className="text-neutral-500">null</span>;
   if (typeof data === "boolean") return <span className="text-purple-400">{String(data)}</span>;
-  if (typeof data === "number") return <span className="text-blue-400">{data}</span>;
+  if (typeof data === "number") return <span className="text-emerald-500">{data}</span>;
   if (typeof data === "string") return <span className="text-emerald-400">"{data}"</span>;
 
   const isArray = Array.isArray(data);
@@ -157,7 +157,7 @@ export function UnixTimestampConverter() {
           <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Date &amp; Time (Local)</label>
           <div className="flex gap-2">
             <input type="datetime-local" value={dateStr} onChange={e => setDateStr(e.target.value)} className="flex-1 bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-emerald-500/50 focus:outline-none" />
-            <Button size="sm" onClick={toTs} className="bg-blue-500 hover:bg-blue-600 text-white font-bold shrink-0">→ Unix</Button>
+            <Button size="sm" onClick={toTs} className="bg-emerald-500 hover:bg-emerald-600 text-black font-bold shrink-0">→ Unix</Button>
           </div>
         </div>
       </div>
@@ -405,7 +405,7 @@ function htmlToMd(html: string): string {
   m = m.replace(/<em[^>]*>(.*?)<\/em>/gi, "*$1*");
   m = m.replace(/<i[^>]*>(.*?)<\/i>/gi, "*$1*");
   m = m.replace(/<code[^>]*>(.*?)<\/code>/gi, "`$1`");
-  m = m.replace(/<pre[^>]*>(.*?)<\/pre>/gis, "```\n$1\n```");
+  m = m.replace(/<pre[^>]*>([\s\S]*?)<\/pre>/gi, "```\n$1\n```");
   m = m.replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gi, "[$2]($1)");
   m = m.replace(/<li[^>]*>(.*?)<\/li>/gi, "- $1");
   m = m.replace(/<ul[^>]*>|<\/ul>/gi, "");
