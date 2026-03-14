@@ -94,6 +94,13 @@ import { ArrowRight } from "lucide-react";
 import { ImageUpscaler } from "@/components/tools/image/image-upscaler";
 import { URLShortener } from "@/components/tools/url-shortener";
 import { BSOD } from "@/components/tools/bsod";
+import {
+  PngToJpg, PngToWebp, PngToBmp,
+  JpgToPng, JpgToWebp, JpgToBmp,
+  WebpToJpg, WebpToPng,
+  BmpToJpg, BmpToPng,
+  GifToJpg, GifToPng, GifToWebp,
+} from "@/components/tools/image/image-format-converter";
 
 const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
   WordCounter,
@@ -173,6 +180,12 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
   AICodeHelper,
   AIContentWriter,
   SentimentAnalyzer,
+  // Image Format Converters
+  PngToJpg, PngToWebp, PngToBmp,
+  JpgToPng, JpgToWebp, JpgToBmp,
+  WebpToJpg, WebpToPng,
+  BmpToJpg, BmpToPng,
+  GifToJpg, GifToPng, GifToWebp,
 };
 
 export default function ToolClientPage({ toolSlug }: { toolSlug: string }) {
