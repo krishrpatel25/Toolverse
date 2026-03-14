@@ -1005,6 +1005,21 @@ const _RAW_TOOL_DEFINITIONS: Tool[] = [
     tags: ["ai", "content"],
     usageCount: 0,
   },
+
+  // ── Image Format Converters ──────────────────────────────────────────────
+  { id: "png-to-jpg",  name: "PNG to JPG Converter",  description: "Convert PNG images to JPG format",    category: "image", icon: FileImage, slug: "png-to-jpg",  component: "PngToJpg",  tags: ["image", "convert", "png", "jpg"],         usageCount: 0 },
+  { id: "png-to-webp", name: "PNG to WebP Converter", description: "Convert PNG images to WebP format",   category: "image", icon: FileImage, slug: "png-to-webp", component: "PngToWebp", tags: ["image", "convert", "png", "webp"],        usageCount: 0 },
+  { id: "png-to-bmp",  name: "PNG to BMP Converter",  description: "Convert PNG images to BMP format",    category: "image", icon: FileImage, slug: "png-to-bmp",  component: "PngToBmp",  tags: ["image", "convert", "png", "bmp"],         usageCount: 0 },
+  { id: "jpg-to-png",  name: "JPG to PNG Converter",  description: "Convert JPG images to PNG format",    category: "image", icon: FileImage, slug: "jpg-to-png",  component: "JpgToPng",  tags: ["image", "convert", "jpg", "png"],         usageCount: 0 },
+  { id: "jpg-to-webp", name: "JPG to WebP Converter", description: "Convert JPG images to WebP format",   category: "image", icon: FileImage, slug: "jpg-to-webp", component: "JpgToWebp", tags: ["image", "convert", "jpg", "webp"],        usageCount: 0 },
+  { id: "jpg-to-bmp",  name: "JPG to BMP Converter",  description: "Convert JPG images to BMP format",    category: "image", icon: FileImage, slug: "jpg-to-bmp",  component: "JpgToBmp",  tags: ["image", "convert", "jpg", "bmp"],         usageCount: 0 },
+  { id: "webp-to-jpg", name: "WebP to JPG Converter", description: "Convert WebP images to JPG format",   category: "image", icon: FileImage, slug: "webp-to-jpg", component: "WebpToJpg", tags: ["image", "convert", "webp", "jpg"],        usageCount: 0 },
+  { id: "webp-to-png", name: "WebP to PNG Converter", description: "Convert WebP images to PNG format",   category: "image", icon: FileImage, slug: "webp-to-png", component: "WebpToPng", tags: ["image", "convert", "webp", "png"],        usageCount: 0 },
+  { id: "bmp-to-jpg",  name: "BMP to JPG Converter",  description: "Convert BMP images to JPG format",    category: "image", icon: FileImage, slug: "bmp-to-jpg",  component: "BmpToJpg",  tags: ["image", "convert", "bmp", "jpg"],         usageCount: 0 },
+  { id: "bmp-to-png",  name: "BMP to PNG Converter",  description: "Convert BMP images to PNG format",    category: "image", icon: FileImage, slug: "bmp-to-png",  component: "BmpToPng",  tags: ["image", "convert", "bmp", "png"],         usageCount: 0 },
+  { id: "gif-to-jpg",  name: "GIF to JPG Converter",  description: "Convert GIF images to JPG format",    category: "image", icon: FileImage, slug: "gif-to-jpg",  component: "GifToJpg",  tags: ["image", "convert", "gif", "jpg"],         usageCount: 0 },
+  { id: "gif-to-png",  name: "GIF to PNG Converter",  description: "Convert GIF images to PNG format",    category: "image", icon: FileImage, slug: "gif-to-png",  component: "GifToPng",  tags: ["image", "convert", "gif", "png"],         usageCount: 0 },
+  { id: "gif-to-webp", name: "GIF to WebP Converter", description: "Convert GIF images to WebP format",   category: "image", icon: FileImage, slug: "gif-to-webp", component: "GifToWebp", tags: ["image", "convert", "gif", "webp"],        usageCount: 0 },
 ];
 
 // Merge SEO content + FAQs into each tool definition
