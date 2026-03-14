@@ -94,7 +94,7 @@ export function ImageBackgroundRemover() {
 
   return (
     <div className="space-y-5 w-full">
-      <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/20 text-blue-400 text-xs">
+      <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 text-xs">
         💡 Works best with images that have a solid or uniform background colour. Adjust tolerance for best results.
       </div>
 
@@ -237,7 +237,7 @@ export function FaviconGenerator() {
       <canvas ref={canvasRef} className="hidden" />
       <div className="flex gap-2 flex-wrap">
         {(["text","image"] as const).map(m => (
-          <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 rounded-lg text-xs font-bold border transition-all ${mode === m ? "border-indigo-500/40 bg-indigo-500/10 text-indigo-400" : "border-white/10 text-neutral-500 hover:border-white/20"}`}>
+          <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 rounded-lg text-xs font-bold border transition-all ${mode === m ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400" : "border-white/10 text-neutral-500 hover:border-white/20"}`}>
             {m === "text" ? "Text / Letter" : "Upload Image"}
           </button>
         ))}
@@ -250,16 +250,16 @@ export function FaviconGenerator() {
             <>
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Text (1–2 characters)</label>
-                <Input value={text} onChange={e => setText(e.target.value.slice(0, 2))} className="bg-white/[0.03] border-white/10 focus:border-indigo-500/50 text-xl font-bold" maxLength={2} />
+                <Input value={text} onChange={e => setText(e.target.value.slice(0, 2))} className="bg-white/[0.03] border-white/10 focus:border-emerald-500/50 text-xl font-bold" maxLength={2} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Font Size</label>
-                <input type="range" min={20} max={120} value={fontSize} onChange={e => setFontSize(+e.target.value)} className="w-full accent-indigo-500 h-1.5 rounded-full appearance-none cursor-pointer bg-white/5" />
+                <input type="range" min={20} max={120} value={fontSize} onChange={e => setFontSize(+e.target.value)} className="w-full accent-emerald-500 h-1.5 rounded-full appearance-none cursor-pointer bg-white/5" />
               </div>
             </>
           ) : (
             <label className="flex flex-col items-center justify-center gap-3 min-h-[100px] rounded-xl border-2 border-dashed border-white/10 hover:border-white/20 cursor-pointer bg-white/[0.02] transition-all">
-              <Upload className="w-6 h-6 text-indigo-400" />
+              <Upload className="w-6 h-6 text-emerald-400" />
               <p className="text-xs text-neutral-400">{file ? file.name : "Upload image"}</p>
               <input type="file" accept="image/*" className="sr-only" onChange={e => { const f = e.target.files?.[0]; if (f) { setFile(f); } }} />
             </label>
@@ -269,7 +269,7 @@ export function FaviconGenerator() {
             <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Shape</label>
             <div className="flex gap-2">
               {(["square","rounded","circle"] as const).map(s => (
-                <button key={s} onClick={() => setShape(s)} className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-all ${shape === s ? "border-indigo-500/40 bg-indigo-500/10 text-indigo-400" : "border-white/10 text-neutral-500"}`}>{s}</button>
+                <button key={s} onClick={() => setShape(s)} className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-all ${shape === s ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400" : "border-white/10 text-neutral-500"}`}>{s}</button>
               ))}
             </div>
           </div>
@@ -288,7 +288,7 @@ export function FaviconGenerator() {
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Text Color</label>
                 <div className="flex flex-wrap gap-1.5">
-                  {["#ffffff","#000000","#6366f1","#10b981"].map(c => (
+                  {["#ffffff","#000000","#10b981","#6366f1"].map(c => (
                     <button key={c} onClick={() => setTextColor(c)} className={`w-6 h-6 rounded-md border-2 transition-all ${textColor === c ? "border-white scale-110" : "border-transparent"}`} style={{ background: c }} />
                   ))}
                   <input type="color" value={textColor} onChange={e => setTextColor(e.target.value)} className="w-6 h-6 rounded-md cursor-pointer border-0 bg-transparent" />
@@ -317,12 +317,12 @@ export function FaviconGenerator() {
             <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Download Sizes</label>
             <div className="flex flex-wrap gap-2">
               {FAVICON_SIZES.map(s => (
-                <button key={s} onClick={() => download(s)} className="px-3 py-1.5 rounded-lg border border-white/10 text-xs text-neutral-400 hover:border-indigo-500/40 hover:text-indigo-400 hover:bg-indigo-500/5 transition-all font-bold">
+                <button key={s} onClick={() => download(s)} className="px-3 py-1.5 rounded-lg border border-white/10 text-xs text-neutral-400 hover:border-emerald-500/40 hover:text-emerald-400 hover:bg-emerald-500/5 transition-all font-bold">
                   {s}×{s}
                 </button>
               ))}
             </div>
-            <Button onClick={downloadICO} className="w-full h-11 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl">
+            <Button onClick={downloadICO} className="w-full h-11 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-xl">
               <Download size={14} className="mr-2" /> Download favicon.ico (32×32)
             </Button>
           </div>

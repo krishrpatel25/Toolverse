@@ -88,7 +88,7 @@ export function PDFCompressor() {
             {[
               { label: "Original", val: formatBytes(file.size), color: "text-neutral-300" },
               { label: "Compressed", val: formatBytes(result.bytes.byteLength), color: "text-emerald-400" },
-              { label: "Saved", val: `${pct(result.bytes.byteLength, file.size)}%`, color: "text-blue-400" },
+              { label: "Saved", val: `${pct(result.bytes.byteLength, file.size)}%`, color: "text-emerald-400" },
             ].map(({ label, val, color }) => (
               <div key={label} className="p-3 rounded-xl bg-white/[0.03] border border-white/10 text-center">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-1">{label}</p>
@@ -151,11 +151,11 @@ export function PDFSplitter() {
   return (
     <div className="space-y-5 w-full">
       <label
-        className={`flex flex-col items-center justify-center gap-4 min-h-[140px] rounded-2xl border-2 border-dashed cursor-pointer transition-all ${file ? "border-blue-500/40 bg-blue-500/5" : "border-white/10 bg-white/[0.02] hover:border-white/20"}`}
+        className={`flex flex-col items-center justify-center gap-4 min-h-[140px] rounded-2xl border-2 border-dashed cursor-pointer transition-all ${file ? "border-emerald-500/40 bg-emerald-500/5" : "border-white/10 bg-white/[0.02] hover:border-white/20"}`}
         onDragOver={e => e.preventDefault()}
         onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) handleFile(f); }}
       >
-        <Scissors className="w-7 h-7 text-blue-400" />
+        <Scissors className="w-7 h-7 text-emerald-400" />
         <p className="text-sm font-semibold text-white text-center">{file ? `${file.name} (${pageCount} pages)` : "Drop PDF here or click to browse"}</p>
         <input type="file" accept="application/pdf" className="sr-only" onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
       </label>
@@ -164,7 +164,7 @@ export function PDFSplitter() {
         <div className="space-y-4">
           <div className="flex gap-2">
             {(["range","pick"] as const).map(m => (
-              <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 rounded-lg text-xs font-bold border transition-all ${mode === m ? "border-blue-500/40 bg-blue-500/10 text-blue-400" : "border-white/10 text-neutral-500 hover:border-white/20"}`}>
+              <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 rounded-lg text-xs font-bold border transition-all ${mode === m ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400" : "border-white/10 text-neutral-500 hover:border-white/20"}`}>
                 {m === "range" ? "Page Range" : "Pick Pages"}
               </button>
             ))}
@@ -174,22 +174,22 @@ export function PDFSplitter() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">From Page</label>
-                <input type="number" min={1} max={to} value={from} onChange={e => setFrom(+e.target.value)} className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500/50 focus:outline-none" />
+                <input type="number" min={1} max={to} value={from} onChange={e => setFrom(+e.target.value)} className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-emerald-500/50 focus:outline-none" />
               </div>
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">To Page</label>
-                <input type="number" min={from} max={pageCount} value={to} onChange={e => setTo(+e.target.value)} className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500/50 focus:outline-none" />
+                <input type="number" min={from} max={pageCount} value={to} onChange={e => setTo(+e.target.value)} className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-emerald-500/50 focus:outline-none" />
               </div>
             </div>
           ) : (
             <div className="flex flex-wrap gap-2 max-h-[150px] overflow-y-auto p-1">
               {Array.from({ length: pageCount }, (_, i) => i + 1).map(p => (
-                <button key={p} onClick={() => togglePage(p)} className={`w-9 h-9 rounded-lg text-xs font-bold border transition-all ${selected.includes(p) ? "border-blue-500/40 bg-blue-500/20 text-blue-400" : "border-white/10 text-neutral-500 hover:border-white/20"}`}>{p}</button>
+                <button key={p} onClick={() => togglePage(p)} className={`w-9 h-9 rounded-lg text-xs font-bold border transition-all ${selected.includes(p) ? "border-emerald-500/40 bg-emerald-500/20 text-emerald-400" : "border-white/10 text-neutral-500 hover:border-white/20"}`}>{p}</button>
               ))}
             </div>
           )}
 
-          <Button onClick={split} disabled={processing || (mode === "pick" && selected.length === 0)} className="w-full h-11 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl">
+          <Button onClick={split} disabled={processing || (mode === "pick" && selected.length === 0)} className="w-full h-11 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-xl">
             {processing ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Splitting…</> : <><Scissors size={14} className="mr-2" /> Extract Pages</>}
           </Button>
         </div>
