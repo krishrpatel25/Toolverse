@@ -68,71 +68,54 @@ export function PasswordGenerator() {
   };
 
   return (
-    <div className="space-y-6">
-      <Card className="p-8 border-white/5 bg-neutral-900/30 backdrop-blur-sm rounded-[2rem]">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-             <div className="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
-              <ShieldCheck className="w-6 h-6 text-emerald-400" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Password Generator</h2>
-              <p className="text-sm text-neutral-400">Generate uncrackable secure passwords</p>
-            </div>
-          </div>
+    <div className="space-y-5">
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <label className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Password Length</label>
+          <span className="text-xl font-black text-white">{length}</span>
         </div>
+        <input
+          type="range"
+          min="4"
+          max="64"
+          value={length}
+          onChange={(e) => setLength(parseInt(e.target.value))}
+          className="w-full accent-emerald-500 h-1.5 bg-white/5 rounded-full appearance-none cursor-pointer"
+        />
+        <div className="flex justify-between text-[10px] text-neutral-600 font-bold uppercase">
+          <span>4</span><span>64</span>
+        </div>
+      </div>
 
-        <div className="grid gap-8">
-          <div className="space-y-4">
-             <div className="flex justify-between items-end px-1">
-                <label className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Password Length</label>
-                <span className="text-2xl font-black text-white">{length}</span>
-             </div>
-             <input
-                type="range"
-                min="4"
-                max="64"
-                value={length}
-                onChange={(e) => setLength(parseInt(e.target.value))}
-                className="w-full accent-emerald-500 h-1.5 bg-white/5 rounded-full appearance-none cursor-pointer"
-             />
-             <div className="flex justify-between text-[10px] text-neutral-600 font-bold uppercase px-1">
-               <span>4 Bits</span>
-               <span>64 Bits</span>
-             </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { label: 'Lowercase', sub: 'a-z', active: includeLowercase, set: setIncludeLowercase },
-              { label: 'Uppercase', sub: 'A-Z', active: includeUppercase, set: setIncludeUppercase },
-              { label: 'Numbers', sub: '0-9', active: includeNumbers, set: setIncludeNumbers },
-              { label: 'Symbols', sub: '!@#', active: includeSymbols, set: setIncludeSymbols },
-            ].map((opt) => (
-              <button
-                key={opt.label}
-                onClick={() => opt.set(!opt.active)}
-                className={`p-4 rounded-[1.5rem] border transition-all text-left ${
-                  opt.active 
-                    ? 'border-emerald-500/30 bg-emerald-500/5 text-emerald-400' 
-                    : 'border-white/5 bg-white/[0.02] text-neutral-500 hover:border-white/10'
-                }`}
-              >
-                <p className="text-[10px] font-black uppercase tracking-widest mb-1">{opt.label}</p>
-                <p className="text-xs font-mono opacity-60">{opt.sub}</p>
-              </button>
-            ))}
-          </div>
-
-          <Button 
-            onClick={generate} 
-            className="w-full h-14 bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-emerald-500/10"
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: 'Lowercase', sub: 'a-z', active: includeLowercase, set: setIncludeLowercase },
+          { label: 'Uppercase', sub: 'A-Z', active: includeUppercase, set: setIncludeUppercase },
+          { label: 'Numbers', sub: '0-9', active: includeNumbers, set: setIncludeNumbers },
+          { label: 'Symbols', sub: '!@#', active: includeSymbols, set: setIncludeSymbols },
+        ].map((opt) => (
+          <button
+            key={opt.label}
+            onClick={() => opt.set(!opt.active)}
+            className={`p-3 rounded-xl border transition-all text-left ${
+              opt.active
+                ? 'border-emerald-500/30 bg-emerald-500/5 text-emerald-400'
+                : 'border-white/5 bg-white/[0.02] text-neutral-500 hover:border-white/10'
+            }`}
           >
-            <Sparkles className="w-5 h-5 mr-2" />
-            Generate Strong Password
-          </Button>
-        </div>
-      </Card>
+            <p className="text-[10px] font-black uppercase tracking-widest mb-0.5">{opt.label}</p>
+            <p className="text-xs font-mono opacity-60">{opt.sub}</p>
+          </button>
+        ))}
+      </div>
+
+      <Button
+        onClick={generate}
+        className="w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-xl"
+      >
+        <Sparkles className="w-4 h-4 mr-2" />
+        Generate Strong Password
+      </Button>
 
       <AnimatePresence>
         {passwords.length > 0 && (
