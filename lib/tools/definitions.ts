@@ -75,6 +75,20 @@ import {
   Bot,
   PenTool,
   Monitor,
+
+  // New tools icons
+  Database,
+  Eye,
+  Binary,
+  Server,
+  ShieldAlert,
+  Network,
+  Star,
+  Eraser,
+  ImagePlus,
+  FileCog,
+  FileMinus,
+  FileOutput,
 } from "lucide-react";
 
 const _RAW_TOOL_DEFINITIONS: Tool[] = [
@@ -1020,6 +1034,28 @@ const _RAW_TOOL_DEFINITIONS: Tool[] = [
   { id: "gif-to-jpg",  name: "GIF to JPG Converter",  description: "Convert GIF images to JPG format",    category: "image", icon: FileImage, slug: "gif-to-jpg",  component: "GifToJpg",  tags: ["image", "convert", "gif", "jpg"],         usageCount: 0 },
   { id: "gif-to-png",  name: "GIF to PNG Converter",  description: "Convert GIF images to PNG format",    category: "image", icon: FileImage, slug: "gif-to-png",  component: "GifToPng",  tags: ["image", "convert", "gif", "png"],         usageCount: 0 },
   { id: "gif-to-webp", name: "GIF to WebP Converter", description: "Convert GIF images to WebP format",   category: "image", icon: FileImage, slug: "gif-to-webp", component: "GifToWebp", tags: ["image", "convert", "gif", "webp"],        usageCount: 0 },
+
+  // ── New Tools ────────────────────────────────────────────────────────────
+  // Image
+  { id: "image-background-remover", name: "Image Background Remover", description: "Remove background from images automatically", category: "image", icon: Eraser,     slug: "image-background-remover", component: "ImageBackgroundRemover", tags: ["image", "background", "remove", "transparent"], usageCount: 0 },
+  { id: "favicon-generator",        name: "Favicon Generator",        description: "Generate favicons in all sizes from text or image",  category: "image", icon: ImagePlus, slug: "favicon-generator",        component: "FaviconGenerator",        tags: ["favicon", "icon", "image", "generator"],         usageCount: 0 },
+
+  // File / PDF
+  { id: "pdf-compressor",   name: "PDF Compressor",      description: "Reduce PDF file size while maintaining quality", category: "file", icon: FileMinus,  slug: "pdf-compressor",   component: "PDFCompressor", tags: ["pdf", "compress", "file", "size"],       usageCount: 0 },
+  { id: "pdf-splitter",     name: "PDF Splitter",        description: "Split a PDF into pages or ranges",              category: "file", icon: Scissors,   slug: "pdf-splitter",     component: "PDFSplitter",   tags: ["pdf", "split", "pages", "file"],        usageCount: 0 },
+  { id: "pdf-to-word",      name: "PDF to Word Converter",description: "Extract text from PDF and export to Word",     category: "file", icon: FileOutput, slug: "pdf-to-word",      component: "PDFToWord",     tags: ["pdf", "word", "convert", "text"],       usageCount: 0 },
+
+  // Developer
+  { id: "sql-formatter",           name: "SQL Formatter",             description: "Format and beautify SQL queries",                category: "developer", icon: Database,    slug: "sql-formatter",           component: "SQLFormatter",       tags: ["sql", "format", "database", "query"],              usageCount: 0 },
+  { id: "json-viewer",             name: "JSON Viewer",               description: "Visualize and explore JSON data interactively",  category: "developer", icon: Eye,         slug: "json-viewer",             component: "JSONViewer",         tags: ["json", "viewer", "tree", "explorer"],              usageCount: 0 },
+  { id: "unix-timestamp",          name: "Unix Timestamp Converter",  description: "Convert between Unix timestamps and human dates", category: "developer", icon: Binary,      slug: "unix-timestamp",          component: "UnixTimestampConverter", tags: ["unix", "timestamp", "date", "time"],           usageCount: 0 },
+  { id: "dns-lookup",              name: "DNS Lookup Tool",           description: "Query DNS records for any domain",              category: "developer", icon: Network,     slug: "dns-lookup",              component: "DNSLookup",          tags: ["dns", "lookup", "domain", "network"],              usageCount: 0 },
+  { id: "ssl-checker",             name: "SSL Certificate Checker",   description: "Check SSL certificate validity and details",    category: "developer", icon: ShieldAlert, slug: "ssl-checker",             component: "SSLChecker",         tags: ["ssl", "certificate", "https", "security"],         usageCount: 0 },
+  { id: "ip-lookup",               name: "IP Address Lookup",         description: "Get detailed info about any IP address",        category: "developer", icon: Server,      slug: "ip-lookup",               component: "IPLookup",           tags: ["ip", "lookup", "geolocation", "network"],          usageCount: 0 },
+  { id: "markdown-to-html",        name: "Markdown to HTML Converter",description: "Convert Markdown to HTML instantly",            category: "developer", icon: Code,        slug: "markdown-to-html",        component: "MarkdownToHTML",     tags: ["markdown", "html", "convert", "text"],             usageCount: 0 },
+  { id: "html-to-markdown",        name: "HTML to Markdown Converter",description: "Convert HTML markup to Markdown format",        category: "developer", icon: FileCode,    slug: "html-to-markdown",        component: "HTMLToMarkdown",     tags: ["html", "markdown", "convert", "text"],             usageCount: 0 },
+  { id: "bcrypt-generator",        name: "Bcrypt Hash Generator",     description: "Generate and verify bcrypt-style password hashes", category: "developer", icon: Lock,     slug: "bcrypt-generator",        component: "BcryptGenerator",    tags: ["bcrypt", "hash", "password", "security"],          usageCount: 0 },
+  { id: "sha256-generator",        name: "SHA-256 Hash Generator",    description: "Generate SHA-256 cryptographic hashes",         category: "developer", icon: Hash,        slug: "sha256-generator",        component: "SHA256Generator",    tags: ["sha256", "hash", "crypto", "security"],            usageCount: 0 },
 ];
 
 // Merge SEO content + FAQs into each tool definition

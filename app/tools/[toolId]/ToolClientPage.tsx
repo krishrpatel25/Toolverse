@@ -101,6 +101,18 @@ import {
   BmpToJpg, BmpToPng,
   GifToJpg, GifToPng, GifToWebp,
 } from "@/components/tools/image/image-format-converter";
+import {
+  SQLFormatter, JSONViewer, UnixTimestampConverter,
+  DNSLookup, IPLookup, SSLChecker,
+  MarkdownToHTML, HTMLToMarkdown,
+  SHA256Generator, BcryptGenerator,
+} from "@/components/tools/developer-tools2";
+import {
+  PDFCompressor, PDFSplitter, PDFToWord,
+} from "@/components/tools/pdf-tools2";
+import {
+  ImageBackgroundRemover, FaviconGenerator,
+} from "@/components/tools/image-utility-tools";
 
 const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
   WordCounter,
@@ -186,6 +198,15 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
   WebpToJpg, WebpToPng,
   BmpToJpg, BmpToPng,
   GifToJpg, GifToPng, GifToWebp,
+  // Developer Tools 2
+  SQLFormatter, JSONViewer, UnixTimestampConverter,
+  DNSLookup, IPLookup, SSLChecker,
+  MarkdownToHTML, HTMLToMarkdown,
+  SHA256Generator, BcryptGenerator,
+  // PDF Tools 2
+  PDFCompressor, PDFSplitter, PDFToWord,
+  // Image Utility Tools
+  ImageBackgroundRemover, FaviconGenerator,
 };
 
 export default function ToolClientPage({ toolSlug }: { toolSlug: string }) {
