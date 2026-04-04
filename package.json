@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "check:secrets": "node scripts/check-tracked-secrets.mjs",
     "dev": "next dev",
-    "build": "next build",
-    "preview": "opennextjs-cloudflare build",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "deploy:pages": "opennextjs-cloudflare build && copy .open-next\\worker.js .open-next\\assets\\_worker.js && xcopy /E /I /Y .open-next\\cloudflare .open-next\\assets\\cloudflare && xcopy /E /I /Y .open-next\\middleware .open-next\\assets\\middleware && xcopy /E /I /Y .open-next\\server-functions .open-next\\assets\\server-functions && xcopy /E /I /Y .open-next\\.build .open-next\\assets\\.build && wrangler pages deploy .open-next\\assets --project-name toolsverse-io",
+    "build": "npm run check:secrets && next build",
+    "preview": "npm run check:secrets && opennextjs-cloudflare build",
+    "deploy": "npm run check:secrets && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "deploy:pages": "npm run check:secrets && opennextjs-cloudflare build && copy .open-next\\worker.js .open-next\\assets\\_worker.js && xcopy /E /I /Y .open-next\\cloudflare .open-next\\assets\\cloudflare && xcopy /E /I /Y .open-next\\middleware .open-next\\assets\\middleware && xcopy /E /I /Y .open-next\\server-functions .open-next\\assets\\server-functions && xcopy /E /I /Y .open-next\\.build .open-next\\assets\\.build && wrangler pages deploy .open-next\\assets --project-name toolsverse-io",
     "start": "next start",
     "lint": "eslint ."
   },

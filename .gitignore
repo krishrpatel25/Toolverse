@@ -5,8 +5,12 @@
 /.next/
 /out/
 /build
-.open-next
-# OpenNext/Cloudflare can inline env into this file — do not commit
+
+# OpenNext / Cloudflare output (never commit — includes next-env.mjs with inlined secrets)
+.open-next/
+
+# Explicit: env bundle filename (also appears if copied outside .open-next/)
+next-env.mjs
 **/next-env.mjs
 
 # testing
