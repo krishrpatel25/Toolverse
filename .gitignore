@@ -12,6 +12,7 @@
 # Explicit: env bundle filename (also appears if copied outside .open-next/)
 next-env.mjs
 **/next-env.mjs
+next-env.mjs
 
 # testing
 /coverage
